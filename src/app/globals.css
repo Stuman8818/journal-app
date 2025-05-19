@@ -44,7 +44,7 @@ body {
 }
 
 .animate-cloud {
-  animation: cloud-drift 20s linear infinite;
+  animation: cloud-drift 30s linear infinite;
 }
 
 .animate-petal {
