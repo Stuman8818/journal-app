@@ -14,17 +14,19 @@ interface DailyLog {
   notes: string; // new!
 }
 
+const initialLog: DailyLog = {
+  water: 0,
+  sleep: 0,
+  outdoors: 0,
+  activity: 0,
+  cookedAtHome: false,
+  eatingOutCost: 0,
+  emotion: "😐",
+  notes: "",
+};
+
 export default function Home() {
-  const [log, setLog] = useState<DailyLog>({
-    water: 0,
-    sleep: 0,
-    outdoors: 0,
-    activity: 0,
-    cookedAtHome: false,
-    eatingOutCost: 0,
-    emotion: "😐", // default neutral
-    notes: "",
-  });
+  const [log, setLog] = useState<DailyLog>(initialLog);
   const [saving, setSaving] = useState(false);
   const [now, setNow] = useState(() => new Date());
 
@@ -64,6 +66,22 @@ export default function Home() {
 
   const handleNotesChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setLog((prev) => ({ ...prev, notes: e.target.value }));
+  };
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setSaving(true);
+    try {
+      const formData = new FormData(e.currentTarget);
+      await createLog(formData);
+      // now clear everything
+      setLog(initialLog);
+    } catch (err) {
+      console.error(err);
+      alert("Save failed");
+    } finally {
+      setSaving(false);
+    }
   };
 
   const leafContainerRef = useRef<HTMLDivElement>(null);
@@ -126,7 +144,7 @@ export default function Home() {
 
       <div className="absolute flex z-10 left-[639px] top-[345px]">
         <form
-          action={createLog}
+          onSubmit={handleSubmit}
           className="bg-slate-800/75 p-6 rounded-lg shadow-lg w-full max-w-md space-y-6"
         >
           <input type="hidden" name="date" value={formatDateOnly(now)} />
