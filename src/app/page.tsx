@@ -1,103 +1,68 @@
-import Image from "next/image";
+"use client";
+import { useEffect, useRef } from 'react';
+import Header from './components/header';
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const leafContainerRef = useRef<HTMLDivElement>(null);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+  useEffect(() => {
+    const container = leafContainerRef.current;
+    if (!container) return;
+
+    const createLeaf = () => {
+      const leaf = document.createElement('svg');
+      leaf.innerHTML = `
+        <svg width="12" height="12" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
+          <rect x="5" y="1" width="2" height="1" fill="#FF69B4" />
+          <rect x="4" y="2" width="4" height="1" fill="#FF69B4" />
+          <rect x="3" y="3" width="6" height="1" fill="#FF69B4" />
+          <rect x="4" y="4" width="4" height="1" fill="#FF69B4" />
+          <rect x="5" y="5" width="2" height="1" fill="#FF69B4" />
+        </svg>
+      `;
+      leaf.className = 'absolute w-6 h-6 pixelated animate-petal';
+      leaf.style.top = `${50 + Math.random() * 20 - 10}%`; // Center range: 40%–60%
+      leaf.style.left = '-15px';
+      container.appendChild(leaf);
+
+      leaf.addEventListener('animationend', () => leaf.remove());
+    };
+
+    const interval = setInterval(createLeaf, 500);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="w-screen h-screen aspect-[4/3] border-[10px] border-[#333] overflow-hidden pixelated relative">
+      {/* Header and Title */}
+      <Header />
+      <h1 className="title text-xl z-11">Daily Log</h1>
+
+      {/* Sun */}
+      <img
+        src="/sun_shiny.png"
+        className="absolute top-4 right-4 w-12 h-12 pixelated z-10"
+        alt="Shiny Sun"
+      />
+
+      {/* Clouds */}
+      <img src="/C2010.png" className="absolute top-10 right-20 w-15 h-10 pixelated animate-cloud" />
+      <img src="/C2011.png" className="absolute top-60 right-40 w-15 h-10 pixelated animate-cloud" />
+
+      {/* Ground and Trees */}
+      <div className="ground">
+        <img src="/Green Trees/Tree 1.png" className="absolute bottom-0 left-4 w-16 h-24 pixelated z-10" />
+        <img src="/Green Trees/Tree 1.png" className="absolute bottom-0 left-20 w-16 h-24 pixelated z-10" />
+        <img src="/Green Trees/Tree 2.png" className="absolute bottom-0 left-36 w-16 h-24 pixelated z-10" />
+        <img src="/Green Trees/Tree 2.png" className="absolute bottom-0 left-52 w-16 h-24 pixelated z-10" />
+        <img src="/Green Trees/Tree 3.png" className="absolute bottom-0 right-52 w-16 h-24 pixelated z-10" />
+        <img src="/Green Trees/Tree 3.png" className="absolute bottom-0 right-36 w-16 h-24 pixelated z-10" />
+        <img src="/Green Trees/Tree 3.1.png" className="absolute bottom-0 right-20 w-16 h-24 pixelated z-10" />
+        <img src="/Green Trees/Tree 4.png" className="absolute bottom-0 right-4 w-16 h-24 pixelated z-10" />
+      </div>
+
+      {/* Leaves */}
+      <div ref={leafContainerRef} className="absolute inset-0 pointer-events-none" />
     </div>
   );
 }
