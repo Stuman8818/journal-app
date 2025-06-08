@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState, ChangeEvent, FormEvent } from "react";
 import Header from "./components/header";
 import { createLog } from "../app/lib/log-action";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession, signIn } from "next-auth/react";
 
 interface DailyLog {
   water: number;
@@ -101,12 +101,19 @@ export default function Home() {
     e.preventDefault();
     setSaving(true);
     try {
-      const formData = new FormData(e.currentTarget);
-      await createLog(formData);
-      // now clear everything
+      const payload = {
+        date: formatDateOnly(now),
+        ...log,
+      };
+      const res = await fetch("/api/logs", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) throw new Error("Save failed");
       setLog(initialLog);
     } catch (err) {
-      console.error(err);
       alert("Save failed");
     } finally {
       setSaving(false);

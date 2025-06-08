@@ -22,8 +22,8 @@ export default function MenuAppBar() {
   };
 
   const handleLogout = async () => {
-    handleClose();
     await signOut({ callbackUrl: "/" });
+    handleClose();
   };
 
   return (
