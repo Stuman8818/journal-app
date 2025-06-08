@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState, ChangeEvent, FormEvent } from "react";
 import Header from "./components/header";
 import { createLog } from "../app/lib/log-action";
+import { useSession, signIn, signOut } from "next-auth/react";
 
 interface DailyLog {
   water: number;
@@ -26,9 +27,15 @@ const initialLog: DailyLog = {
 };
 
 export default function Home() {
+  const { data: session, status } = useSession();
+  const loading = status === "loading";
+  const [isRegister, setIsRegister] = useState(false);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [log, setLog] = useState<DailyLog>(initialLog);
   const [saving, setSaving] = useState(false);
   const [now, setNow] = useState(() => new Date());
+  const leafContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const timer = setInterval(() => setNow(new Date()), 1000);
@@ -60,6 +67,28 @@ export default function Home() {
       setLog((prev) => ({ ...prev, [field]: value }));
     };
 
+  const handleAuth = async (e: FormEvent) => {
+    e.preventDefault();
+    if (isRegister) {
+      const res = await fetch("/api/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
+      if (!res.ok) return alert("Registration failed");
+      await signIn("credentials", { redirect: false, username, password });
+    } else {
+      const res = await signIn("credentials", {
+        redirect: false,
+        username,
+        password,
+      });
+      if (res?.error) alert("Login failed");
+    }
+  };
+
+  if (loading) return <div className="p-4">Checking session…</div>;
+
   const handleEmotionChange = (e: ChangeEvent<HTMLInputElement>) => {
     setLog((prev) => ({ ...prev, emotion: e.target.value }));
   };
@@ -83,8 +112,6 @@ export default function Home() {
       setSaving(false);
     }
   };
-
-  const leafContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const container = leafContainerRef.current;
@@ -113,6 +140,52 @@ export default function Home() {
     return () => clearInterval(interval);
   }, []);
 
+  if (!session) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-gray-100">
+        <form
+          onSubmit={handleAuth}
+          className="p-8 bg-white rounded shadow-md space-y-4 w-80"
+        >
+          <h2 className="text-2xl text-center">
+            {isRegister ? "Register" : "Log In"}
+          </h2>
+          <input
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            className="w-full p-2 border rounded"
+            required
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full p-2 border rounded"
+            required
+          />
+          <button
+            type="submit"
+            className="w-full py-2 bg-blue-600 text-white rounded"
+          >
+            {isRegister ? "Create Account" : "Log In"}
+          </button>
+          <p className="text-center text-sm">
+            {isRegister ? "Already have one?" : "No account yet?"}{" "}
+            <button
+              type="button"
+              onClick={() => setIsRegister(!isRegister)}
+              className="text-blue-600 underline"
+            >
+              {isRegister ? "Log In" : "Register"}
+            </button>
+          </p>
+        </form>
+      </div>
+    );
+  }
   return (
     <div className="w-screen h-screen aspect-[4/3] border-[10px] border-[#333] overflow-hidden pixelated relative">
       {/* Header and Title */}

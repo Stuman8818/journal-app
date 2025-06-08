@@ -1,14 +1,15 @@
-"use client"; // Required for Client Component in Next.js App Router
+"use client";
 
-import { useState } from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import MenuItem from '@mui/material/MenuItem';
-import Menu from '@mui/material/Menu';
+import { useState } from "react";
+import { signOut } from "next-auth/react";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import MenuIcon from "@mui/icons-material/Menu";
+import AccountCircle from "@mui/icons-material/AccountCircle";
+import MenuItem from "@mui/material/MenuItem";
+import Menu from "@mui/material/Menu";
 
 export default function MenuAppBar() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -16,9 +17,13 @@ export default function MenuAppBar() {
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
-
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleLogout = async () => {
+    handleClose();
+    await signOut({ callbackUrl: "/" });
   };
 
   return (
@@ -26,12 +31,12 @@ export default function MenuAppBar() {
       <AppBar
         position="static"
         sx={{
-          backgroundColor: '#64b5f6', // Lighter blue
-          imageRendering: 'pixelated', // Retro effect (mainly for images)
-          boxShadow: '0 4px 4px rgba(0, 0, 0, 0.5)', // Sharp shadow for pixel vibe
+          backgroundColor: "#64b5f6",
+          imageRendering: "pixelated",
+          boxShadow: "0 4px 4px rgba(0, 0, 0, 0.5)",
         }}
       >
-        <Toolbar sx={{ display: 'flex', justifyContent: 'space-between'}}>
+        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
           <IconButton
             size="large"
             edge="start"
@@ -41,6 +46,7 @@ export default function MenuAppBar() {
           >
             <MenuIcon />
           </IconButton>
+
           <div>
             <IconButton
               size="large"
@@ -56,26 +62,27 @@ export default function MenuAppBar() {
               id="menu-appbar"
               anchorEl={anchorEl}
               anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
+                vertical: "top",
+                horizontal: "right",
               }}
               keepMounted
               transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
+                vertical: "top",
+                horizontal: "right",
               }}
               open={Boolean(anchorEl)}
               onClose={handleClose}
               sx={{
-                '& .MuiPaper-root': {
-                  backgroundColor: '#64b5f6', // Match dropdown to AppBar
-                  imageRendering: 'pixelated',
-                  border: '2px solid #333', // Retro border
+                "& .MuiPaper-root": {
+                  backgroundColor: "#64b5f6",
+                  imageRendering: "pixelated",
+                  border: "2px solid #333",
                 },
               }}
             >
               <MenuItem onClick={handleClose}>Profile</MenuItem>
               <MenuItem onClick={handleClose}>My account</MenuItem>
+              <MenuItem onClick={handleLogout}>Logout</MenuItem>
             </Menu>
           </div>
         </Toolbar>
