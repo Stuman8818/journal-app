@@ -10,6 +10,8 @@ interface DailyLog {
   activity: number;
   cookedAtHome: boolean;
   eatingOutCost: number;
+  emotion: string; // new!
+  notes: string; // new!
 }
 
 export default function Home() {
@@ -20,15 +22,49 @@ export default function Home() {
     activity: 0,
     cookedAtHome: false,
     eatingOutCost: 0,
+    emotion: "😐", // default neutral
+    notes: "",
   });
   const [saving, setSaving] = useState(false);
+  const [now, setNow] = useState(() => new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const formatDateOnly = (d: Date) => {
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const dd = String(d.getDate()).padStart(2, "0");
+    const yyyy = d.getFullYear();
+    return `${mm}/${dd}/${yyyy}`;
+  };
+
+  const formatDate = (d: Date) => {
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const dd = String(d.getDate()).padStart(2, "0");
+    const yyyy = d.getFullYear();
+    const hh = String(d.getHours()).padStart(2, "0");
+    const min = String(d.getMinutes()).padStart(2, "0");
+    const ss = String(d.getSeconds()).padStart(2, "0");
+    return `${mm}/${dd}/${yyyy}, ${hh}:${min}:${ss}`;
+  };
 
   const handleChange =
-    (field: keyof DailyLog) => (e: ChangeEvent<HTMLInputElement>) => {
+    (field: keyof Omit<DailyLog, "emotion" | "notes">) =>
+    (e: ChangeEvent<HTMLInputElement>) => {
       const value =
         field === "cookedAtHome" ? e.target.checked : Number(e.target.value);
       setLog((prev) => ({ ...prev, [field]: value }));
     };
+
+  const handleEmotionChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setLog((prev) => ({ ...prev, emotion: e.target.value }));
+  };
+
+  const handleNotesChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    setLog((prev) => ({ ...prev, notes: e.target.value }));
+  };
 
   const leafContainerRef = useRef<HTMLDivElement>(null);
 
@@ -63,6 +99,12 @@ export default function Home() {
     <div className="w-screen h-screen aspect-[4/3] border-[10px] border-[#333] overflow-hidden pixelated relative">
       {/* Header and Title */}
       <Header />
+      <h1
+        style={{ color: "white" }}
+        className="absolute top-4 right-[10px] text-5xl z-20 font-mono"
+      >
+        {formatDate(now)}
+      </h1>
       <h1 className="title z-11">Daily Log</h1>
 
       {/* Sun */}
@@ -87,6 +129,7 @@ export default function Home() {
           action={createLog}
           className="bg-slate-800/75 p-6 rounded-lg shadow-lg w-full max-w-md space-y-6"
         >
+          <input type="hidden" name="date" value={formatDateOnly(now)} />
           <div className="flex flex-row pb-3">
             <label
               className="text-gray-200 mb-1 whitespace-nowrap"
@@ -194,6 +237,52 @@ export default function Home() {
               />
             </div>
           )}
+
+          <div className="space-y-2">
+            <span className="text-gray-200">How do you feel today?</span>
+            <div className="flex justify-between">
+              {[
+                { label: "😢", title: "Very unhappy" },
+                { label: "🙁", title: "A little unhappy" },
+                { label: "😐", title: "Neutral" },
+                { label: "🙂", title: "A little happy" },
+                { label: "😄", title: "Great" },
+              ].map(({ label, title }) => (
+                <label key={label} className="flex flex-col items-center">
+                  <input
+                    type="radio"
+                    name="emotion"
+                    value={label}
+                    checked={log.emotion === label}
+                    onChange={handleEmotionChange}
+                    className="peer sr-only"
+                  />
+                  <span
+                    className="cursor-pointer text-2xl peer-checked:scale-125 peer-checked:opacity-100 opacity-60 transition"
+                    title={title}
+                  >
+                    {label}
+                  </span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          {/* 2. Free-form notes */}
+          <div className="flex flex-col">
+            <label className="text-gray-200 mb-1" htmlFor="notes">
+              Journal Entry
+            </label>
+            <textarea
+              id="notes"
+              name="notes"
+              rows={4}
+              value={log.notes}
+              onChange={handleNotesChange}
+              className="p-2 rounded bg-slate-700 text-white border-2 border-white focus:outline-none"
+              placeholder="Write your thoughts here…"
+            />
+          </div>
           <div className="flex justify-end">
             <button
               type="submit"
