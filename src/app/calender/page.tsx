@@ -54,7 +54,28 @@ export default class CalendarPage extends Component<Props, State> {
             month: "short",
           })} ${dayNumber}`
         : dayNumber;
-    // … rest of your renderDay logic …
+    const selectedMonthStartDate = new Date(selectedYear, selectedMonth - 1, 1); // first day of month.
+    const selectedMonthEndDate = new Date(selectedYear, selectedMonth, 0); // last day of month.
+    const dayIsInSelectedMonth =
+      date >= selectedMonthStartDate && date <= selectedMonthEndDate;
+    const isToday = new Date().toDateString() === date.toDateString();
+    let color = `grey`;
+    let fontWeight = `normal`;
+    if (isToday) {
+      color = `blue`;
+      fontWeight = `bold`;
+    } else if (dayIsInSelectedMonth) {
+      color = `black`;
+    }
+    const focusedStyle =
+      this.state.focusedCellID === cellID
+        ? {
+            backgroundColor: `yellow`,
+            boxShadow: `0px 0px 5px blue`,
+            overflow: `visible`,
+          }
+        : {};
+
     return (
       <div
         tabIndex={0}
@@ -66,7 +87,7 @@ export default class CalendarPage extends Component<Props, State> {
           justifyContent: "flex-start",
           cursor: "pointer",
           userSelect: "none",
-          // … focusedStyle …
+          ...focusedStyle,
         }}
         className="calendar-day"
       >
@@ -74,7 +95,9 @@ export default class CalendarPage extends Component<Props, State> {
           style={{
             display: "flex",
             flex: 1,
-            margin: 5 /*, color, fontWeight */,
+            margin: 5,
+            color,
+            fontWeight,
           }}
         >
           {dayText}
@@ -107,17 +130,19 @@ export default class CalendarPage extends Component<Props, State> {
 
   render() {
     return (
-      <Calender
-        locale={this.locale}
-        year={this.state.year}
-        month={this.state.month}
-        renderDay={(date, cellID) =>
-          this.renderDay(date, cellID, this.state.year, this.state.month)
-        }
-        renderDayHeading={this.renderDayHeading}
-        renderHeading={this.renderHeading}
-        borderOptions={{ width: 1, color: "black" }}
-      />
+      <div>
+        <Calender
+          locale={this.locale}
+          year={this.state.year}
+          month={this.state.month}
+          renderDay={(date, cellID) =>
+            this.renderDay(date, cellID, this.state.year, this.state.month)
+          }
+          renderDayHeading={this.renderDayHeading}
+          renderHeading={this.renderHeading}
+          borderOptions={{ width: 1, color: "black" }}
+        />
+      </div>
     );
   }
 }
