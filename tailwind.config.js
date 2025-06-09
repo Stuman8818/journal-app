@@ -6,11 +6,7 @@ module.exports = {
     // add any other places you use Tailwind classes
   ],
   theme: {
-    extend: {
-      fontFamily: {
-        diary: ["'Indie Flower'", "cursive"],
-      },
-    },
+    extend: {},
   },
   plugins: [],
 };

@@ -3,10 +3,7 @@ import { useEffect, useRef, useState, ChangeEvent, FormEvent } from "react";
 import Header from "./components/header";
 import { createLog } from "../app/lib/log-action";
 import { useSession, signIn } from "next-auth/react";
-<link
-  href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap"
-  rel="stylesheet"
-/>;
+
 interface DailyLog {
   water: number;
   sleep: number;
@@ -193,10 +190,7 @@ export default function Home() {
     <div className="w-screen h-screen aspect-[4/3] border-[10px] border-[#333] overflow-hidden pixelated relative">
       {/* Header and Title */}
       <Header />
-      <h1
-        style={{ color: "white" }}
-        className="absolute top-4 right-[10px] text-5xl z-20 font-mono"
-      >
+      <h1 style={{ color: "white" }} className="text-2xl z-20 flex justify-end">
         {formatDate(now)}
       </h1>
       <h1 className="title z-11">Daily Log</h1>
@@ -384,7 +378,7 @@ export default function Home() {
               value={log.notes}
               onChange={handleNotesChange}
               placeholder="Write your thoughts here…"
-              className="resize-y focus:outline-none text-yellow-900 font-[\'Indie\ Flower\',cursive] focus:ring-0 tracking-wide font-diary p-4 bg-yellow-50 bg-opacity-80 placeholder-yellow-600 placeholder-opacity-70 border-2 border-yellow-300  rounded-lg shadow-inner italic"
+              className="resize-y focus:outline-none text-yellow-900 font-focus:ring-0 tracking-wide font-diary p-4 bg-yellow-50 bg-opacity-80 placeholder-yellow-600 placeholder-opacity-70 border-2 border-yellow-300  rounded-lg shadow-inner italic"
             />
           </div>
           <div className="flex justify-end">
