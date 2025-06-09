@@ -24,10 +24,15 @@ export interface Post {
 }
 
 interface CalendarPageProps {
-  initialPosts: Post[];
+  initialPosts?: Post[]; // optional, because we’ll default it
 }
 
-const CalendarPage: React.FC<CalendarPageProps> = ({ initialPosts }) => {
+const CalendarPage: React.FC = () => {
+  // defaultPosts is some Post[] you define above
+  const defaultPosts: Post[] = [
+    /* … */
+  ];
+  const [posts, setPosts] = useState<Post[]>(defaultPosts);
   const locale = "en-us";
 
   const weekdays = useMemo(
@@ -39,8 +44,7 @@ const CalendarPage: React.FC<CalendarPageProps> = ({ initialPosts }) => {
   const [year, setYear] = useState(today.getFullYear());
   const [month, setMonth] = useState(today.getMonth() + 1);
   const [focusedCellID, setFocusedCellID] = useState<string | null>(null);
-  const [posts, setPosts] = useState<Post[]>(initialPosts);
-  console.log(initialPosts, "intials posts");
+
   // Fetch stored logs when component mounts
   useEffect(() => {
     async function fetchLatest() {
@@ -68,6 +72,20 @@ const CalendarPage: React.FC<CalendarPageProps> = ({ initialPosts }) => {
     eatingOutCostSum,
     topEmotion,
   } = useMemo(() => {
+    // 1) build a map YYYY-MM-DD → latest log of that day
+    const latestByDay: Record<string, Post> = {};
+    for (const log of monthPosts) {
+      const dayKey = new Date(log.date).toISOString().slice(0, 10);
+      const existing = latestByDay[dayKey];
+      if (!existing || new Date(log.date) > new Date(existing.date)) {
+        latestByDay[dayKey] = log;
+      }
+    }
+
+    // 2) extract only those latest-of-each-day posts
+    const dailyLatest = Object.values(latestByDay);
+
+    // 3) now sum them up
     let water = 0,
       sleep = 0,
       activity = 0,
@@ -75,7 +93,7 @@ const CalendarPage: React.FC<CalendarPageProps> = ({ initialPosts }) => {
       eatingOutCost = 0;
     const emotionCount: Record<string, number> = {};
 
-    for (const log of monthPosts) {
+    for (const log of dailyLatest) {
       water += log.water;
       sleep += log.sleep;
       activity += log.activity;
@@ -84,9 +102,9 @@ const CalendarPage: React.FC<CalendarPageProps> = ({ initialPosts }) => {
       emotionCount[log.emotion] = (emotionCount[log.emotion] || 0) + 1;
     }
 
-    // find the emotion with max count
-    let top = "";
-    let max = 0;
+    // 4) pick the most frequent emotion
+    let top = "",
+      max = 0;
     for (const [emo, cnt] of Object.entries(emotionCount)) {
       if (cnt > max) {
         max = cnt;
@@ -212,7 +230,7 @@ const CalendarPage: React.FC<CalendarPageProps> = ({ initialPosts }) => {
   const renderHeading = useCallback(
     () => (
       <>
-        {/* 1) Top row: your month title + nav arrows */}
+        {/* Month title + nav */}
         <DefaultCalendarHeading
           title={localizedYearMonth(locale, "long", "numeric", year, month)}
           onNextMonthClicked={() => {
@@ -227,23 +245,20 @@ const CalendarPage: React.FC<CalendarPageProps> = ({ initialPosts }) => {
           }}
         />
 
-        {/* 2) Bottom row: six stats, evenly spaced */}
+        {/* Single-row stats bar */}
         <div
           style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr) repeat(3, 1fr)",
-            gap: "1rem",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
             marginTop: "1rem",
             padding: "0 1rem",
             fontSize: "0.9rem",
           }}
         >
-          {/* left three */}
           <div>💧 Water: {waterSum} oz</div>
           <div>🛏️ Sleep: {sleepSum} h</div>
           <div>🏃 Activity: {activitySum}</div>
-
-          {/* right three */}
           <div>🌳 Outdoors: {outdoorsSum} h</div>
           <div>🍽️ Eating Out: ${eatingOutCostSum}</div>
           <div>😊 Top Emotion: {topEmotion}</div>
@@ -266,6 +281,7 @@ const CalendarPage: React.FC<CalendarPageProps> = ({ initialPosts }) => {
   return (
     <div>
       <Header />
+
       <Calender
         locale={locale}
         year={year}

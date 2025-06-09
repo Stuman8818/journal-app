@@ -2,8 +2,11 @@
 import { useEffect, useRef, useState, ChangeEvent, FormEvent } from "react";
 import Header from "./components/header";
 import { createLog } from "../app/lib/log-action";
-import { useSession, signIn, signOut } from "next-auth/react";
-
+import { useSession, signIn } from "next-auth/react";
+<link
+  href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap"
+  rel="stylesheet"
+/>;
 interface DailyLog {
   water: number;
   sleep: number;
@@ -223,7 +226,7 @@ export default function Home() {
           <input type="hidden" name="date" value={formatDate(now)} />
           <div className="flex flex-row pb-3">
             <label
-              className="text-gray-200 mb-1 whitespace-nowrap"
+              className="text-white font-bold text-xl mb-1 whitespace-nowrap"
               htmlFor="water"
             >
               Water (oz)
@@ -240,7 +243,7 @@ export default function Home() {
 
           <div className="flex flex-row pb-3 text-white">
             <label
-              className="text-gray-200 mb-1 whitespace-nowrap"
+              className="text-white font-bold text-xl mb-1 whitespace-nowrap"
               htmlFor="sleep"
             >
               Sleep (hrs)
@@ -256,7 +259,10 @@ export default function Home() {
           </div>
 
           <div className="flex flex-row pb-3">
-            <label className="text-gray-200 mb-1" htmlFor="outdoors">
+            <label
+              className="text-white font-bold text-xl mb-1"
+              htmlFor="outdoors"
+            >
               Time Spent Outdoors (mins)
             </label>
             <input
@@ -270,7 +276,10 @@ export default function Home() {
           </div>
 
           <div className="flex flex-row pb-3">
-            <label className="text-gray-200 mb-1" htmlFor="activity">
+            <label
+              className="text-white font-bold text-xl mb-1"
+              htmlFor="activity"
+            >
               Physical Activity (mins)
             </label>
             <input
@@ -284,14 +293,18 @@ export default function Home() {
           </div>
 
           <div className="flex flex-row items-center gap-4">
-            <span className="w-1/2 text-gray-200">Cooked at Home?</span>
+            <span className="w-1/2 text-white font-bold text-xl">
+              Cooked at Home?
+            </span>
             <button
               type="button"
               onClick={() =>
                 setLog((prev) => ({ ...prev, cookedAtHome: true }))
               }
               className={`px-3 py-1 border rounded ${
-                log.cookedAtHome ? "bg-green-500 text-white" : "text-gray-200"
+                log.cookedAtHome
+                  ? "bg-green-500 text-white"
+                  : "text-white font-bold text-xl"
               }`}
             >
               Yes
@@ -361,7 +374,7 @@ export default function Home() {
 
           {/* 2. Free-form notes */}
           <div className="flex flex-col">
-            <label className="text-gray-200 mb-1" htmlFor="notes">
+            <label className="text-yellow-800 mb-1" htmlFor="notes">
               Journal Entry
             </label>
             <textarea
@@ -370,8 +383,8 @@ export default function Home() {
               rows={4}
               value={log.notes}
               onChange={handleNotesChange}
-              className="p-2 rounded bg-slate-700 text-white border-2 border-white focus:outline-none"
               placeholder="Write your thoughts here…"
+              className="resize-y focus:outline-none text-yellow-900 font-[\'Indie\ Flower\',cursive] focus:ring-0 tracking-wide font-diary p-4 bg-yellow-50 bg-opacity-80 placeholder-yellow-600 placeholder-opacity-70 border-2 border-yellow-300  rounded-lg shadow-inner italic"
             />
           </div>
           <div className="flex justify-end">

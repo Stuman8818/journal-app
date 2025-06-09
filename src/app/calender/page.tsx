@@ -10,11 +10,6 @@ export default async function JournalPage() {
     .find()
     .sort({ date: -1 })
     .toArray();
-  console.log(raw, "raw");
-  const initialPosts: Post[] = raw.map((d) => ({
-    date: d.date,
-    content: d.notes,
-  }));
 
-  return <JournalHistory initialPosts={initialPosts} />;
+  return <JournalHistory />;
 }

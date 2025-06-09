@@ -81,6 +81,9 @@ export default function MenuAppBar() {
                 },
               }}
             >
+              <MenuItem>
+                <Link href="/">Journal</Link>
+              </MenuItem>
               <MenuItem onClick={handleClose}>Profile</MenuItem>
               <MenuItem onClick={handleClose}>My account</MenuItem>
               <MenuItem>
