@@ -8,6 +8,7 @@ import {
   localizedWeekdayNames,
   localizedYearMonth,
 } from "../lib/localize-date";
+import Header from "../components/header";
 
 type State = {
   year: number;
@@ -131,6 +132,7 @@ export default class CalendarPage extends Component<Props, State> {
   render() {
     return (
       <div>
+        <Header />
         <Calender
           locale={this.locale}
           year={this.state.year}
