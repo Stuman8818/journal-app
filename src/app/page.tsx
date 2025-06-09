@@ -220,7 +220,7 @@ export default function Home() {
           onSubmit={handleSubmit}
           className="bg-slate-800/75 p-6 rounded-lg shadow-lg w-full max-w-md space-y-6"
         >
-          <input type="hidden" name="date" value={formatDateOnly(now)} />
+          <input type="hidden" name="date" value={formatDate(now)} />
           <div className="flex flex-row pb-3">
             <label
               className="text-gray-200 mb-1 whitespace-nowrap"

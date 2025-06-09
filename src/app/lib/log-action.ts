@@ -1,9 +1,10 @@
 "use server";
 
 import { MongoClient } from "mongodb";
+import { revalidatePath } from "next/cache";
 
 let cached: MongoClient | null = null;
-async function getClient() {
+export async function getClient() {
   if (cached) return cached;
   const client = new MongoClient(process.env.MONGODB_URI!);
   await client.connect();
@@ -31,7 +32,7 @@ export async function createLog(formData: FormData) {
   const client = await getClient();
   const db = client.db(process.env.MONGODB_DB);
   await db.collection("dailyLogs").insertOne(data);
-
+  console.log(db.collection);
   // optionally revalidate the page:
-  // revalidatePath("/");
+  revalidatePath("/journal");
 }

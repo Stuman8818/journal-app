@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { MongoClient } from "mongodb";
 
 let cached: MongoClient | null = null;
-async function getClient() {
+export async function getClient() {
   if (cached) return cached;
   const uri = process.env.MONGODB_URI!;
   const client = new MongoClient(uri);
@@ -22,7 +22,11 @@ export async function POST(req: NextRequest) {
 
 export async function GET() {
   const client = await getClient();
-  const db = client.db(process.env.MONGODB_DB || "myDatabase");
-  const logs = await db.collection("dailyLogs").find().toArray();
+  const db = client.db(process.env.MONGODB_DB!);
+  const logs = await db
+    .collection("dailyLogs")
+    .find()
+    .sort({ date: -1 })
+    .toArray(); // always an array!
   return NextResponse.json(logs);
 }
