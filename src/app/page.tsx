@@ -331,7 +331,7 @@ export default function Home() {
 
           <div className="space-y-2">
             <span className="text-gray-200">How do you feel today?</span>
-            <div className="flex justify-between">
+            <div className="flex justify-between space-x-4">
               {[
                 { label: "😢", title: "Very unhappy" },
                 { label: "🙁", title: "A little unhappy" },
@@ -349,7 +349,7 @@ export default function Home() {
                     className="peer sr-only"
                   />
                   <span
-                    className="cursor-pointer text-2xl peer-checked:scale-125 peer-checked:opacity-100 opacity-60 transition"
+                    className="cursor-pointer text-4xl peer-checked:scale-125 peer-checked:opacity-100 opacity-60 transition"
                     title={title}
                   >
                     {label}
