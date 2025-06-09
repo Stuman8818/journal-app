@@ -12,7 +12,15 @@ import Header from "../components/header";
 // Define the shape of a log entry
 export interface Post {
   date: string;
-  content: string;
+  _id: string; // "MM/DD/YYYY, HH:MM:SS"
+  emotion: string;
+  notes: string;
+  water: number;
+  sleep: number;
+  outdoors: number;
+  activity: number;
+  cookedAtHome: boolean;
+  eatingOutCost: number;
 }
 
 interface CalendarPageProps {
@@ -38,12 +46,63 @@ const CalendarPage: React.FC<CalendarPageProps> = ({ initialPosts }) => {
     async function fetchLatest() {
       const res = await fetch("/api/logs");
       if (!res.ok) throw new Error("Failed to fetch");
-      const raw = await res.json(); // Post or Post[]
+      const raw = await res.json();
       const arr: Post[] = Array.isArray(raw) ? raw : [raw];
       setPosts(arr);
     }
     fetchLatest();
   }, []);
+
+  const monthPosts = useMemo(() => {
+    return posts.filter((log) => {
+      const d = new Date(log.date);
+      return d.getFullYear() === year && d.getMonth() + 1 === month;
+    });
+  }, [posts, year, month]);
+
+  const {
+    waterSum,
+    sleepSum,
+    activitySum,
+    outdoorsSum,
+    eatingOutCostSum,
+    topEmotion,
+  } = useMemo(() => {
+    let water = 0,
+      sleep = 0,
+      activity = 0,
+      outdoors = 0,
+      eatingOutCost = 0;
+    const emotionCount: Record<string, number> = {};
+
+    for (const log of monthPosts) {
+      water += log.water;
+      sleep += log.sleep;
+      activity += log.activity;
+      outdoors += log.outdoors;
+      eatingOutCost += log.eatingOutCost;
+      emotionCount[log.emotion] = (emotionCount[log.emotion] || 0) + 1;
+    }
+
+    // find the emotion with max count
+    let top = "";
+    let max = 0;
+    for (const [emo, cnt] of Object.entries(emotionCount)) {
+      if (cnt > max) {
+        max = cnt;
+        top = emo;
+      }
+    }
+
+    return {
+      waterSum: water,
+      sleepSum: sleep,
+      activitySum: activity,
+      outdoorsSum: outdoors,
+      eatingOutCostSum: eatingOutCost,
+      topEmotion: top || "—",
+    };
+  }, [monthPosts]);
 
   console.log(posts, "posts");
   const onDayFocused = useCallback((_: Date, cellID: string) => {
@@ -87,25 +146,11 @@ const CalendarPage: React.FC<CalendarPageProps> = ({ initialPosts }) => {
 
       const cellKey = date.toLocaleDateString("en-US");
 
-      // grab your single “latest” entry
       const latest = posts[0];
-      // build its local date string from the stored timestamp
+
       const latestKey = latest
         ? new Date(latest.date).toLocaleDateString("en-US")
         : null;
-      const iso = date.toISOString().slice(0, 10);
-
-      // if it exists, parse its date into a JS Date
-      // const matchesCell =
-      //   latest &&
-      //   (() => {
-      //     const pd = new Date(latest.date);
-      //     return (
-      //       pd.getFullYear() === date.getFullYear() &&
-      //       pd.getMonth() === date.getMonth() &&
-      //       pd.getDate() === date.getDate()
-      //     );
-      //   })();
 
       return (
         <>
@@ -166,21 +211,56 @@ const CalendarPage: React.FC<CalendarPageProps> = ({ initialPosts }) => {
 
   const renderHeading = useCallback(
     () => (
-      <DefaultCalendarHeading
-        title={localizedYearMonth(locale, "long", "numeric", year, month)}
-        onNextMonthClicked={() => {
-          const { year: y, month: m } = nextMonth(year, month);
-          setYear(y);
-          setMonth(m);
-        }}
-        onPreviousMonthClicked={() => {
-          const { year: y, month: m } = previousMonth(year, month);
-          setYear(y);
-          setMonth(m);
-        }}
-      />
+      <>
+        {/* 1) Top row: your month title + nav arrows */}
+        <DefaultCalendarHeading
+          title={localizedYearMonth(locale, "long", "numeric", year, month)}
+          onNextMonthClicked={() => {
+            const { year: y, month: m } = nextMonth(year, month);
+            setYear(y);
+            setMonth(m);
+          }}
+          onPreviousMonthClicked={() => {
+            const { year: y, month: m } = previousMonth(year, month);
+            setYear(y);
+            setMonth(m);
+          }}
+        />
+
+        {/* 2) Bottom row: six stats, evenly spaced */}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr) repeat(3, 1fr)",
+            gap: "1rem",
+            marginTop: "1rem",
+            padding: "0 1rem",
+            fontSize: "0.9rem",
+          }}
+        >
+          {/* left three */}
+          <div>💧 Water: {waterSum} oz</div>
+          <div>🛏️ Sleep: {sleepSum} h</div>
+          <div>🏃 Activity: {activitySum}</div>
+
+          {/* right three */}
+          <div>🌳 Outdoors: {outdoorsSum} h</div>
+          <div>🍽️ Eating Out: ${eatingOutCostSum}</div>
+          <div>😊 Top Emotion: {topEmotion}</div>
+        </div>
+      </>
     ),
-    [locale, year, month]
+    [
+      locale,
+      year,
+      month,
+      waterSum,
+      sleepSum,
+      activitySum,
+      outdoorsSum,
+      eatingOutCostSum,
+      topEmotion,
+    ]
   );
 
   return (
