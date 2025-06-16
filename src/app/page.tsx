@@ -158,7 +158,7 @@ export default function Home() {
             placeholder="Username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            className="w-full p-2 border rounded"
+            className="w-full p-2 border rounded border-sky-500 text-sky-500"
             required
           />
           <input
@@ -166,7 +166,7 @@ export default function Home() {
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full p-2 border rounded"
+            className="w-full p-2 border rounded border-blue border-sky-500 text-sky-500"
             required
           />
           <button
@@ -193,13 +193,13 @@ export default function Home() {
     <div className="w-screen h-screen aspect-[4/3] border-[10px] border-[#333] overflow-hidden pixelated relative">
       {/* Header and Title */}
       <Header />
-      <div className="flex flex-row justify-between">
+      <div className="flex flex-row h-[8vh] justify-between">
         <img
           src="/sun_shiny.png"
           className="flex justify-start w-40 h-40 pixelated z-10"
           alt="Shiny Sun"
         />
-        <h1 className="title z-11">Daily Log</h1>
+        <h1 className="title text-xl z-11">Daily Log</h1>
         <h1
           style={{ color: "white" }}
           className="text-2xl z-20 flex justify-end"
@@ -267,7 +267,7 @@ export default function Home() {
               type="number"
               value={log.water}
               onChange={handleChange("water")}
-              className="w-1/4 p-2 rounded bg-slate-700 border-solid border-2 border-white text-white"
+              className="w-1/4 p-2 rounded bg-slate-700 border-solid border-2 border-white"
             />
           </div>
 
@@ -284,7 +284,7 @@ export default function Home() {
               type="number"
               value={log.sleep}
               onChange={handleChange("sleep")}
-              className="w-1/4 p-2 rounded bg-slate-700 text-white border-solid border-2 border-white text-white"
+              className="w-1/4 p-2 rounded bg-slate-700  border-solid border-2 border-white text-blue"
             />
           </div>
 

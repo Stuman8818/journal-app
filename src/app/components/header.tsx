@@ -11,9 +11,13 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import Link from "next/link";
+import Profile from "./profile";
 
 export default function MenuAppBar() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const handleProfileToggle = () => setProfileOpen((open) => !open);
+  const handleProfileClose = () => setProfileOpen(false);
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -84,7 +88,7 @@ export default function MenuAppBar() {
               <MenuItem>
                 <Link href="/">Journal</Link>
               </MenuItem>
-              <MenuItem onClick={handleClose}>Profile</MenuItem>
+              <MenuItem onClick={handleProfileToggle}>Profile</MenuItem>
               <MenuItem onClick={handleClose}>My account</MenuItem>
               <MenuItem>
                 <Link href="/calender">Journal History</Link>
@@ -94,6 +98,7 @@ export default function MenuAppBar() {
           </div>
         </Toolbar>
       </AppBar>
+      <Profile open={profileOpen} onClose={handleProfileClose} />
     </Box>
   );
 }
