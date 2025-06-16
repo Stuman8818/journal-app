@@ -164,12 +164,14 @@ const CalendarPage: React.FC = () => {
 
       const cellKey = date.toLocaleDateString("en-US");
 
-      const latest = posts[0];
-
-      const latestKey = latest
-        ? new Date(latest.date).toLocaleDateString("en-US")
-        : null;
-
+      const latestLogForDate = posts
+        .filter((log) => {
+          const d = new Date(log.date);
+          return d.toLocaleDateString("en-US") === cellKey;
+        })
+        .sort(
+          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+        )[0];
       return (
         <>
           <div
@@ -191,27 +193,27 @@ const CalendarPage: React.FC = () => {
             <div style={{ marginBottom: 4, color, fontWeight: weight }}>
               {dayText}
             </div>
-            {latest && cellKey === latestKey && (
+            {latestLogForDate && (
               <div style={{ fontSize: 10, lineHeight: 1.2 }}>
                 <p style={{ margin: 0 }}>
-                  <strong>Emotion:</strong> {latest.emotion}
+                  <strong>Emotion:</strong> {latestLogForDate.emotion}
                 </p>
                 <p style={{ margin: 0 }}>
-                  <strong>Notes:</strong> {latest.notes || "—"}
+                  <strong>Notes:</strong> {latestLogForDate.notes || "—"}
                 </p>
                 <p style={{ margin: 0 }}>
-                  <strong>Water:</strong> {latest.water || "-"}
-                  <strong>Sleep:</strong> {latest.sleep || "-"}
+                  <strong>Water:</strong> {latestLogForDate.water || "-"}{" "}
+                  <strong>Sleep:</strong> {latestLogForDate.sleep || "-"}
                 </p>
                 <p style={{ margin: 0 }}>
-                  <strong>Outdoors:</strong> {latest.outdoors || "-"}
-                  <strong>Activity:</strong> {latest.activity || "-"}
+                  <strong>Outdoors:</strong> {latestLogForDate.outdoors || "-"}{" "}
+                  <strong>Activity:</strong> {latestLogForDate.activity || "-"}
                 </p>
                 <p style={{ margin: 0 }}>
                   <strong>Cooked at Home:</strong>{" "}
-                  {latest.cookedAtHome ? "Yes" : "No"}
+                  {latestLogForDate.cookedAtHome ? "Yes" : "No"}{" "}
                   <strong>Eating Out Cost:</strong> $
-                  {latest.eatingOutCost || "-"}
+                  {latestLogForDate.eatingOutCost || "-"}
                 </p>
               </div>
             )}

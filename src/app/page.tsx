@@ -118,21 +118,24 @@ export default function Home() {
     if (!container) return;
 
     const createLeaf = () => {
-      const leaf = document.createElement("svg");
-      leaf.innerHTML = `
-        <svg width="12" height="12" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
-          <rect x="5" y="1" width="2" height="1" fill="#FF69B4" />
-          <rect x="4" y="2" width="4" height="1" fill="#FF69B4" />
-          <rect x="3" y="3" width="6" height="1" fill="#FF69B4" />
-          <rect x="4" y="4" width="4" height="1" fill="#FF69B4" />
-          <rect x="5" y="5" width="2" height="1" fill="#FF69B4" />
-        </svg>
-      `;
-      leaf.className = "absolute w-6 h-6 pixelated animate-petal";
-      leaf.style.top = `${50 + Math.random() * 20 - 10}%`; // Center range: 40%–60%
-      leaf.style.left = "-15px";
-      container.appendChild(leaf);
+      const leaf = document.createElement("img");
+      leaf.src = "/leaves.png"; // Ensure this is in your public folder
+      leaf.className = "leaf-animation";
 
+      // Randomize vertical start position and scale
+      leaf.style.position = "absolute";
+      leaf.style.top = `${Math.random() * 80}%`; // Random vertical start
+      leaf.style.left = `-50px`;
+      leaf.style.width = `${20 + Math.random() * 20}px`;
+      leaf.style.opacity = `${0.7 + Math.random() * 0.3}`;
+      leaf.style.transform = `rotate(${Math.random() * 360}deg)`;
+
+      // Add animation
+      leaf.style.animation = `fly-across ${
+        8 + Math.random() * 4
+      }s linear forwards`;
+
+      container.appendChild(leaf);
       leaf.addEventListener("animationend", () => leaf.remove());
     };
 
@@ -190,37 +193,70 @@ export default function Home() {
     <div className="w-screen h-screen aspect-[4/3] border-[10px] border-[#333] overflow-hidden pixelated relative">
       {/* Header and Title */}
       <Header />
-      <h1 style={{ color: "white" }} className="text-2xl z-20 flex justify-end">
-        {formatDate(now)}
-      </h1>
-      <h1 className="title z-11">Daily Log</h1>
+      <div className="flex flex-row justify-between">
+        <img
+          src="/sun_shiny.png"
+          className="flex justify-start w-40 h-40 pixelated z-10"
+          alt="Shiny Sun"
+        />
+        <h1 className="title z-11">Daily Log</h1>
+        <h1
+          style={{ color: "white" }}
+          className="text-2xl z-20 flex justify-end"
+        >
+          {formatDate(now)}
+        </h1>
+      </div>
 
       {/* Sun */}
-      <img
-        src="/sun_shiny.png"
-        className="absolute top-4 right-4 w-12 h-12 pixelated z-10"
-        alt="Shiny Sun"
-      />
 
       {/* Clouds */}
       <img
         src="/C2010.png"
-        className="absolute top-10 right-20 w-15 h-10 pixelated animate-cloud"
+        className="absolute top-[5%] left-[5%] w-36 h-20 opacity-90 animate-cloud-slow pixelated"
       />
       <img
         src="/C2011.png"
-        className="absolute top-60 right-40 w-15 h-10 pixelated animate-cloud"
+        className="absolute top-[10%] left-[20%] w-44 h-24 opacity-80 animate-cloud pixelated"
+      />
+      <img
+        src="/C2011.png"
+        className="absolute top-[15%] left-[40%] w-32 h-18 opacity-85 animate-cloud-fast pixelated scale-x-[-1]"
+      />
+      <img
+        src="/C2010.png"
+        className="absolute top-[20%] left-[60%] w-40 h-22 opacity-75 animate-cloud pixelated"
+      />
+      <img
+        src="/C2011.png"
+        className="absolute top-[25%] left-[75%] w-48 h-26 opacity-80 animate-cloud-slow pixelated"
+      />
+      <img
+        src="/C2010.png"
+        className="absolute top-[30%] left-[10%] w-38 h-20 opacity-70 animate-cloud pixelated"
+      />
+      <img
+        src="/C2011.png"
+        className="absolute top-[35%] left-[50%] w-42 h-22 opacity-85 animate-cloud-fast pixelated scale-x-[-1]"
+      />
+      <img
+        src="/C2010.png"
+        className="absolute top-[40%] left-[30%] w-36 h-20 opacity-90 animate-cloud pixelated"
+      />
+      <img
+        src="/C2011.png"
+        className="absolute top-[45%] left-[70%] w-50 h-28 opacity-80 animate-cloud-slow pixelated"
       />
 
-      <div className="absolute flex z-10 left-[639px] top-[345px]">
+      <div className="flex justify-center z-10">
         <form
           onSubmit={handleSubmit}
-          className="bg-slate-800/75 p-6 rounded-lg shadow-lg w-full max-w-md space-y-6"
+          className="bg-slate-800/75 z-20 p-6 rounded-lg shadow-lg w-full max-w-md space-y-3"
         >
           <input type="hidden" name="date" value={formatDate(now)} />
-          <div className="flex flex-row pb-3">
+          <div className="flex flex-row">
             <label
-              className="text-white font-bold text-xl mb-1 whitespace-nowrap"
+              className="text-white font-bold text-lg mb-1 whitespace-nowrap"
               htmlFor="water"
             >
               Water (oz)
@@ -231,13 +267,13 @@ export default function Home() {
               type="number"
               value={log.water}
               onChange={handleChange("water")}
-              className="w-1/4 p-2 rounded bg-slate-700 text-white border-solid border-2 border-white text-white"
+              className="w-1/4 p-2 rounded bg-slate-700 border-solid border-2 border-white text-white"
             />
           </div>
 
-          <div className="flex flex-row pb-3 text-white">
+          <div className="flex flex-row text-white">
             <label
-              className="text-white font-bold text-xl mb-1 whitespace-nowrap"
+              className="text-white font-bold text-lg mb-1 whitespace-nowrap"
               htmlFor="sleep"
             >
               Sleep (hrs)
@@ -252,9 +288,9 @@ export default function Home() {
             />
           </div>
 
-          <div className="flex flex-row pb-3">
+          <div className="flex flex-row">
             <label
-              className="text-white font-bold text-xl mb-1"
+              className="text-white font-bold text-lg mb-1"
               htmlFor="outdoors"
             >
               Time Spent Outdoors (mins)
@@ -269,9 +305,9 @@ export default function Home() {
             />
           </div>
 
-          <div className="flex flex-row pb-3">
+          <div className="flex flex-row">
             <label
-              className="text-white font-bold text-xl mb-1"
+              className="text-white font-bold text-lg mb-1"
               htmlFor="activity"
             >
               Physical Activity (mins)
@@ -287,7 +323,7 @@ export default function Home() {
           </div>
 
           <div className="flex flex-row items-center gap-4">
-            <span className="w-1/2 text-white font-bold text-xl">
+            <span className="w-1/2 text-white font-bold text-lg">
               Cooked at Home?
             </span>
             <button
@@ -298,7 +334,7 @@ export default function Home() {
               className={`px-3 py-1 border rounded ${
                 log.cookedAtHome
                   ? "bg-green-500 text-white"
-                  : "text-white font-bold text-xl"
+                  : "text-white font-bold text-lg"
               }`}
             >
               Yes
@@ -397,35 +433,35 @@ export default function Home() {
       <div className="ground">
         <img
           src="/Green Trees/Tree 1.png"
-          className="absolute bottom-0 left-4 w-16 h-24 pixelated z-10"
+          className="absolute bottom-10 left-4 w-30 h-50 pixelated z-10"
         />
         <img
           src="/Green Trees/Tree 1.png"
-          className="absolute bottom-0 left-20 w-16 h-24 pixelated z-10"
+          className="absolute bottom-20 left-50 w-30 h-50 pixelated z-10"
         />
         <img
           src="/Green Trees/Tree 2.png"
-          className="absolute bottom-0 left-36 w-16 h-24 pixelated z-10"
+          className="absolute bottom-30 left-90 w-30 h-50 pixelated z-10"
         />
         <img
           src="/Green Trees/Tree 2.png"
-          className="absolute bottom-0 left-52 w-16 h-24 pixelated z-10"
+          className="absolute bottom-30 left-120 w-30 h-50 pixelated z-10"
         />
         <img
-          src="/Green Trees/Tree 3.png"
-          className="absolute bottom-0 right-52 w-16 h-24 pixelated z-10"
+          src="/Green Trees/Tree 3.0.png"
+          className="absolute bottom-30 right-120 w-30 h-50 pixelated z-10"
         />
         <img
-          src="/Green Trees/Tree 3.png"
-          className="absolute bottom-0 right-36 w-16 h-24 pixelated z-10"
+          src="/Green Trees/Tree 3.0.png"
+          className="absolute bottom-20 right-90 w-30 h-50 pixelated z-10"
         />
         <img
           src="/Green Trees/Tree 3.1.png"
-          className="absolute bottom-0 right-20 w-16 h-24 pixelated z-10"
+          className="absolute bottom-20 right-50 w-30 h-50 pixelated z-10"
         />
         <img
           src="/Green Trees/Tree 4.png"
-          className="absolute bottom-0 right-4 w-16 h-24 pixelated z-10"
+          className="absolute bottom-10 right-20 w-30 h-50 pixelated z-10"
         />
       </div>
 
