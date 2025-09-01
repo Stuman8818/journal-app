@@ -51,9 +51,8 @@ export default function Profile({ open, onClose }: ProfileProps) {
   const [loading, setLoading] = React.useState(false);
   const router = useRouter();
 
-  // Fetch existing profile from API whenever modal opens
+  // Fetch initial profile data only once when component mounts
   React.useEffect(() => {
-    if (!open) return;
     setLoading(true);
     fetch("/api/profile")
       .then((res) => {
@@ -62,14 +61,14 @@ export default function Profile({ open, onClose }: ProfileProps) {
       })
       .then((profile: Partial<ProfileData>) => {
         // merge with defaults so all fields exist
-        setData((prev) => ({
-          avatar: profile.avatar ?? prev.avatar,
+        setData({
+          avatar: profile.avatar ?? "",
           why: profile.why ?? "",
           height: profile.height ?? "",
           weight: profile.weight ?? "",
           gender: profile.gender ?? "",
           age: profile.age ?? "",
-        }));
+        });
       })
       .catch((err) => {
         console.error("Failed to load profile:", err);
@@ -77,7 +76,7 @@ export default function Profile({ open, onClose }: ProfileProps) {
       .finally(() => {
         setLoading(false);
       });
-  }, [open]);
+  }, []);
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
