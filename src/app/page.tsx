@@ -56,12 +56,6 @@ export default function Home() {
     }
   }, [searchParams]);
 
-  const formatDateOnly = (d: Date) => {
-    const mm = String(d.getMonth() + 1).padStart(2, "0");
-    const dd = String(d.getDate()).padStart(2, "0");
-    const yyyy = d.getFullYear();
-    return `${mm}/${dd}/${yyyy}`;
-  };
 
   const formatDate = (d: Date) => {
     const mm = String(d.getMonth() + 1).padStart(2, "0");
@@ -100,8 +94,6 @@ export default function Home() {
       if (res?.error) alert("Login failed");
     }
   };
-
-  if (loading) return <div className="p-4">Checking session…</div>;
 
   const handleEmotionChange = (e: ChangeEvent<HTMLInputElement>) => {
     setLog((prev) => ({ ...prev, emotion: e.target.value }));
@@ -156,6 +148,8 @@ export default function Home() {
     const interval = setInterval(createLeaf, 500);
     return () => clearInterval(interval);
   }, []);
+
+  if (loading) return <div className="p-4">Checking session…</div>;
 
   if (!session) {
     return (

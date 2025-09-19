@@ -2,7 +2,7 @@
 
 import { range } from "./range";
 import { arrayRotate } from "./array";
-import type { BorderOptions, Weekday } from "./types";
+import type { Weekday } from "./types";
 
 /**
  * Treats a Date as UTC by offsetting by the timezone offset.

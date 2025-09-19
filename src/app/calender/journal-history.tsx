@@ -24,10 +24,6 @@ export interface Post {
   eatingOutCost: number;
 }
 
-interface CalendarPageProps {
-  initialPosts?: Post[]; // optional, because we’ll default it
-}
-
 const CalendarPage: React.FC = () => {
   const router = useRouter();
   // defaultPosts is some Post[] you define above
@@ -52,8 +48,8 @@ const CalendarPage: React.FC = () => {
     async function fetchLatest() {
       const res = await fetch("/api/logs");
       if (!res.ok) throw new Error("Failed to fetch");
-      const raw = await res.json();
-      const arr: Post[] = Array.isArray(raw) ? raw : [raw];
+      const data = await res.json();
+      const arr: Post[] = Array.isArray(data) ? data : [data];
       setPosts(arr);
     }
     fetchLatest();

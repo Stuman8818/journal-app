@@ -2,6 +2,7 @@
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 import { ThemeProvider } from "@mui/material/styles";
 import { SessionProvider } from "next-auth/react";
+import { Session } from "next-auth";
 import theme from "./theme";
 
 export default function ClientProviders({
@@ -9,7 +10,7 @@ export default function ClientProviders({
   session,
 }: {
   children: React.ReactNode;
-  session: any; // import ServerSession type if you want stronger typing
+  session: Session | null;
 }) {
   return (
     <AppRouterCacheProvider>
