@@ -1,11 +1,13 @@
 "use client";
 import { useEffect, useRef, useState, ChangeEvent, FormEvent } from "react";
+import { useSearchParams } from "next/navigation";
 import Header from "./components/header";
 import { createLog } from "../app/lib/log-action";
 import { useSession, signIn } from "next-auth/react";
 
 interface DailyLog {
   water: number;
+  steps: number;
   sleep: number;
   outdoors: number;
   activity: number;
@@ -17,6 +19,7 @@ interface DailyLog {
 
 const initialLog: DailyLog = {
   water: 0,
+  steps: 0,
   sleep: 0,
   outdoors: 0,
   activity: 0,
@@ -27,6 +30,7 @@ const initialLog: DailyLog = {
 };
 
 export default function Home() {
+  const searchParams = useSearchParams();
   const { data: session, status } = useSession();
   const loading = status === "loading";
   const [isRegister, setIsRegister] = useState(false);
@@ -34,13 +38,23 @@ export default function Home() {
   const [password, setPassword] = useState("");
   const [log, setLog] = useState<DailyLog>(initialLog);
   const [saving, setSaving] = useState(false);
-  const [now, setNow] = useState(() => new Date());
+  const [now, setNow] = useState(() => {
+    const dateParam = searchParams?.get('date');
+    if (dateParam) {
+      const parsedDate = new Date(dateParam);
+      return isNaN(parsedDate.getTime()) ? new Date() : parsedDate;
+    }
+    return new Date();
+  });
   const leafContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const timer = setInterval(() => setNow(new Date()), 1000);
-    return () => clearInterval(timer);
-  }, []);
+    const dateParam = searchParams?.get('date');
+    if (!dateParam) {
+      const timer = setInterval(() => setNow(new Date()), 1000);
+      return () => clearInterval(timer);
+    }
+  }, [searchParams]);
 
   const formatDateOnly = (d: Date) => {
     const mm = String(d.getMonth() + 1).padStart(2, "0");
@@ -213,39 +227,56 @@ export default function Home() {
       {/* Clouds */}
       <img
         src="/C2010.png"
-        className="absolute top-[5%] left-[5%] w-36 h-20 opacity-90 animate-cloud-slow pixelated"
+        className="absolute top-[5%] left-[5%] w-72 h-40 opacity-90 animate-cloud-slow pixelated"
       />
       <img
         src="/C2011.png"
-        className="absolute top-[10%] left-[20%] w-44 h-24 opacity-80 animate-cloud pixelated"
+        className="absolute top-[10%] left-[20%] w-88 h-48 opacity-80 animate-cloud pixelated"
       />
       <img
         src="/C2011.png"
-        className="absolute top-[15%] left-[40%] w-32 h-18 opacity-85 animate-cloud-fast pixelated scale-x-[-1]"
+        className="absolute top-[15%] left-[40%] w-64 h-36 opacity-85 animate-cloud-fast pixelated scale-x-[-1]"
       />
       <img
         src="/C2010.png"
-        className="absolute top-[20%] left-[60%] w-40 h-22 opacity-75 animate-cloud pixelated"
+        className="absolute top-[20%] left-[60%] w-80 h-44 opacity-75 animate-cloud pixelated"
       />
       <img
         src="/C2011.png"
-        className="absolute top-[25%] left-[75%] w-48 h-26 opacity-80 animate-cloud-slow pixelated"
+        className="absolute top-[25%] left-[75%] w-96 h-52 opacity-80 animate-cloud-slow pixelated"
       />
       <img
         src="/C2010.png"
-        className="absolute top-[30%] left-[10%] w-38 h-20 opacity-70 animate-cloud pixelated"
+        className="absolute top-[30%] left-[10%] w-76 h-40 opacity-70 animate-cloud pixelated"
       />
       <img
         src="/C2011.png"
-        className="absolute top-[35%] left-[50%] w-42 h-22 opacity-85 animate-cloud-fast pixelated scale-x-[-1]"
+        className="absolute top-[35%] left-[50%] w-84 h-44 opacity-85 animate-cloud-fast pixelated scale-x-[-1]"
       />
       <img
         src="/C2010.png"
-        className="absolute top-[40%] left-[30%] w-36 h-20 opacity-90 animate-cloud pixelated"
+        className="absolute top-[40%] left-[30%] w-72 h-40 opacity-90 animate-cloud pixelated"
       />
       <img
         src="/C2011.png"
-        className="absolute top-[45%] left-[70%] w-50 h-28 opacity-80 animate-cloud-slow pixelated"
+        className="absolute top-[45%] left-[70%] w-100 h-56 opacity-80 animate-cloud-slow pixelated"
+      />
+      {/* Additional clouds in the middle */}
+      <img
+        src="/C2010.png"
+        className="absolute top-[8%] left-[35%] w-68 h-36 opacity-75 animate-cloud pixelated"
+      />
+      <img
+        src="/C2011.png"
+        className="absolute top-[18%] left-[55%] w-72 h-40 opacity-70 animate-cloud-slow pixelated scale-x-[-1]"
+      />
+      <img
+        src="/C2010.png"
+        className="absolute top-[28%] left-[45%] w-76 h-42 opacity-80 animate-cloud-fast pixelated"
+      />
+      <img
+        src="/C2011.png"
+        className="absolute top-[38%] left-[55%] w-80 h-44 opacity-75 animate-cloud pixelated"
       />
 
       <div className="flex justify-center z-10">
@@ -267,6 +298,23 @@ export default function Home() {
               type="number"
               value={log.water}
               onChange={handleChange("water")}
+              className="w-1/4 p-2 rounded bg-slate-700 border-solid border-2 border-white"
+            />
+          </div>
+
+          <div className="flex flex-row">
+            <label
+              className="text-white font-bold text-lg mb-1 whitespace-nowrap"
+              htmlFor="steps"
+            >
+              Steps
+            </label>
+            <input
+              id="steps"
+              name="steps"
+              type="number"
+              value={log.steps}
+              onChange={handleChange("steps")}
               className="w-1/4 p-2 rounded bg-slate-700 border-solid border-2 border-white"
             />
           </div>
@@ -433,35 +481,52 @@ export default function Home() {
       <div className="ground">
         <img
           src="/Green Trees/Tree 1.png"
-          className="absolute bottom-10 left-4 w-30 h-50 pixelated z-10"
+          className="absolute bottom-10 left-4 w-60 h-100 pixelated z-10"
         />
         <img
           src="/Green Trees/Tree 1.png"
-          className="absolute bottom-20 left-50 w-30 h-50 pixelated z-10"
+          className="absolute bottom-20 left-50 w-60 h-100 pixelated z-10"
         />
         <img
           src="/Green Trees/Tree 2.png"
-          className="absolute bottom-30 left-90 w-30 h-50 pixelated z-10"
+          className="absolute bottom-30 left-90 w-60 h-100 pixelated z-10"
         />
         <img
           src="/Green Trees/Tree 2.png"
-          className="absolute bottom-30 left-120 w-30 h-50 pixelated z-10"
+          className="absolute bottom-30 left-120 w-60 h-100 pixelated z-10"
         />
         <img
           src="/Green Trees/Tree 3.0.png"
-          className="absolute bottom-30 right-120 w-30 h-50 pixelated z-10"
+          className="absolute bottom-30 right-120 w-60 h-100 pixelated z-10"
         />
         <img
           src="/Green Trees/Tree 3.0.png"
-          className="absolute bottom-20 right-90 w-30 h-50 pixelated z-10"
+          className="absolute bottom-20 right-90 w-60 h-100 pixelated z-10"
         />
         <img
           src="/Green Trees/Tree 3.1.png"
-          className="absolute bottom-20 right-50 w-30 h-50 pixelated z-10"
+          className="absolute bottom-20 right-50 w-60 h-100 pixelated z-10"
         />
         <img
           src="/Green Trees/Tree 4.png"
-          className="absolute bottom-10 right-20 w-30 h-50 pixelated z-10"
+          className="absolute bottom-10 right-20 w-60 h-100 pixelated z-10"
+        />
+        {/* Additional trees in the middle */}
+        <img
+          src="/Green Trees/Tree 1.png"
+          className="absolute bottom-25 left-1/3 w-60 h-100 pixelated z-10"
+        />
+        <img
+          src="/Green Trees/Tree 2.png"
+          className="absolute bottom-15 left-1/2 w-60 h-100 pixelated z-10"
+        />
+        <img
+          src="/Green Trees/Tree 3.0.png"
+          className="absolute bottom-35 right-1/3 w-60 h-100 pixelated z-10"
+        />
+        <img
+          src="/Green Trees/Tree 4.png"
+          className="absolute bottom-25 right-1/2 w-60 h-100 pixelated z-10"
         />
       </div>
 

@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useMemo, useCallback, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Calender } from "../components/calender";
 import { DefaultCalendarHeading } from "../components/calender-header";
 import { nextMonth, previousMonth } from "../lib/date";
@@ -28,6 +29,7 @@ interface CalendarPageProps {
 }
 
 const CalendarPage: React.FC = () => {
+  const router = useRouter();
   // defaultPosts is some Post[] you define above
   const defaultPosts: Post[] = [
     /* … */
@@ -131,6 +133,20 @@ const CalendarPage: React.FC = () => {
     setFocusedCellID((prev) => (prev === cellID ? null : prev));
   }, []);
 
+  const onDayClick = useCallback((date: Date) => {
+    const today = new Date();
+    today.setHours(23, 59, 59, 999); // Set to end of today for comparison
+    
+    // Only allow clicks on past dates or today
+    if (date <= today) {
+      const mm = String(date.getMonth() + 1).padStart(2, "0");
+      const dd = String(date.getDate()).padStart(2, "0");
+      const yyyy = date.getFullYear();
+      const dateParam = `${mm}/${dd}/${yyyy}`;
+      router.push(`/?date=${encodeURIComponent(dateParam)}`);
+    }
+  }, [router]);
+
   const renderDay = useCallback(
     (
       date: Date,
@@ -148,13 +164,17 @@ const CalendarPage: React.FC = () => {
       const end = new Date(selectedYear, selectedMonth, 0);
       const inMonth = date >= start && date <= end;
       const isToday = date.toDateString() === new Date().toDateString();
+      const today = new Date();
+      today.setHours(23, 59, 59, 999);
+      const isClickable = date <= today;
+      
       let color = "grey";
       let weight = "normal";
       if (isToday) {
         color = "blue";
         weight = "bold";
       } else if (inMonth) {
-        color = "black";
+        color = isClickable ? "black" : "#ccc";
       }
 
       const focusStyle =
@@ -179,14 +199,16 @@ const CalendarPage: React.FC = () => {
             tabIndex={0}
             onFocus={() => onDayFocused(date, cellID)}
             onBlur={() => onDayLostFocus(date, cellID)}
+            onClick={() => onDayClick(date)}
             className="calendar-day"
             style={{
               display: "flex",
               flexDirection: "column",
               flex: 1,
-              cursor: "pointer",
+              cursor: isClickable ? "pointer" : "not-allowed",
               padding: 4,
               userSelect: "none",
+              opacity: isClickable ? 1 : 0.6,
               ...focusStyle,
             }}
           >
@@ -221,7 +243,7 @@ const CalendarPage: React.FC = () => {
         </>
       );
     },
-    [locale, posts, focusedCellID, onDayFocused, onDayLostFocus]
+    [locale, posts, focusedCellID, onDayFocused, onDayLostFocus, onDayClick]
   );
 
   const renderDayHeading = useCallback(
