@@ -204,19 +204,19 @@ export default function Home() {
     );
   }
   return (
-    <div className="w-screen h-screen aspect-[4/3] border-[10px] border-[#333] overflow-hidden pixelated relative">
+    <div className="w-screen h-screen sm:aspect-[4/3] border-[5px] sm:border-[10px] border-[#333] overflow-y-auto overflow-x-hidden pixelated relative">
       {/* Header and Title */}
       <Header />
-      <div className="flex flex-row h-[8vh] justify-between">
+      <div className="flex flex-col sm:flex-row h-auto sm:h-[8vh] justify-between items-center px-2 sm:px-0 py-2 sm:py-0">
         <img
           src="/sun_shiny.png"
-          className="flex justify-start w-40 h-40 pixelated z-10"
+          className="flex justify-start w-20 h-20 sm:w-40 sm:h-40 pixelated z-10"
           alt="Shiny Sun"
         />
-        <h1 className="title text-xl z-11">Daily Log</h1>
+        <h1 className="title text-lg sm:text-xl z-11 order-first sm:order-none">Daily Log</h1>
         <h1
           style={{ color: "white" }}
-          className="text-2xl z-20 flex justify-end"
+          className="text-sm sm:text-2xl z-20 flex justify-end text-center sm:text-right"
         >
           {formatDate(now)}
         </h1>
@@ -227,67 +227,67 @@ export default function Home() {
       {/* Clouds */}
       <img
         src="/C2010.png"
-        className="absolute top-[5%] left-[5%] w-72 h-40 opacity-90 animate-cloud-slow pixelated"
+        className="absolute top-[5%] left-[5%] w-36 h-20 sm:w-72 sm:h-40 opacity-90 animate-cloud-slow pixelated"
       />
       <img
         src="/C2011.png"
-        className="absolute top-[10%] left-[20%] w-88 h-48 opacity-80 animate-cloud pixelated"
+        className="absolute top-[10%] left-[20%] w-44 h-24 sm:w-88 sm:h-48 opacity-80 animate-cloud pixelated"
       />
       <img
         src="/C2011.png"
-        className="absolute top-[15%] left-[40%] w-64 h-36 opacity-85 animate-cloud-fast pixelated scale-x-[-1]"
+        className="absolute top-[15%] left-[40%] w-32 h-18 sm:w-64 sm:h-36 opacity-85 animate-cloud-fast pixelated scale-x-[-1]"
       />
       <img
         src="/C2010.png"
-        className="absolute top-[20%] left-[60%] w-80 h-44 opacity-75 animate-cloud pixelated"
+        className="absolute top-[20%] left-[60%] w-40 h-22 sm:w-80 sm:h-44 opacity-75 animate-cloud pixelated"
       />
       <img
         src="/C2011.png"
-        className="absolute top-[25%] left-[75%] w-96 h-52 opacity-80 animate-cloud-slow pixelated"
+        className="absolute top-[25%] left-[75%] w-48 h-26 sm:w-96 sm:h-52 opacity-80 animate-cloud-slow pixelated"
       />
       <img
         src="/C2010.png"
-        className="absolute top-[30%] left-[10%] w-76 h-40 opacity-70 animate-cloud pixelated"
+        className="absolute top-[30%] left-[10%] w-38 h-20 sm:w-76 sm:h-40 opacity-70 animate-cloud pixelated"
       />
       <img
         src="/C2011.png"
-        className="absolute top-[35%] left-[50%] w-84 h-44 opacity-85 animate-cloud-fast pixelated scale-x-[-1]"
+        className="absolute top-[35%] left-[50%] w-42 h-22 sm:w-84 sm:h-44 opacity-85 animate-cloud-fast pixelated scale-x-[-1]"
       />
       <img
         src="/C2010.png"
-        className="absolute top-[40%] left-[30%] w-72 h-40 opacity-90 animate-cloud pixelated"
+        className="absolute top-[40%] left-[30%] w-36 h-20 sm:w-72 sm:h-40 opacity-90 animate-cloud pixelated"
       />
       <img
         src="/C2011.png"
-        className="absolute top-[45%] left-[70%] w-100 h-56 opacity-80 animate-cloud-slow pixelated"
+        className="absolute top-[45%] left-[70%] w-50 h-28 sm:w-100 sm:h-56 opacity-80 animate-cloud-slow pixelated"
       />
-      {/* Additional clouds in the middle */}
+      {/* Additional clouds in the middle - hidden on mobile */}
       <img
         src="/C2010.png"
-        className="absolute top-[8%] left-[35%] w-68 h-36 opacity-75 animate-cloud pixelated"
+        className="hidden sm:block absolute top-[8%] left-[35%] w-68 h-36 opacity-75 animate-cloud pixelated"
       />
       <img
         src="/C2011.png"
-        className="absolute top-[18%] left-[55%] w-72 h-40 opacity-70 animate-cloud-slow pixelated scale-x-[-1]"
+        className="hidden sm:block absolute top-[18%] left-[55%] w-72 h-40 opacity-70 animate-cloud-slow pixelated scale-x-[-1]"
       />
       <img
         src="/C2010.png"
-        className="absolute top-[28%] left-[45%] w-76 h-42 opacity-80 animate-cloud-fast pixelated"
+        className="hidden sm:block absolute top-[28%] left-[45%] w-76 h-42 opacity-80 animate-cloud-fast pixelated"
       />
       <img
         src="/C2011.png"
-        className="absolute top-[38%] left-[55%] w-80 h-44 opacity-75 animate-cloud pixelated"
+        className="hidden sm:block absolute top-[38%] left-[55%] w-80 h-44 opacity-75 animate-cloud pixelated"
       />
 
-      <div className="flex justify-center z-10">
+      <div className="flex justify-center z-10 px-2 sm:px-0">
         <form
           onSubmit={handleSubmit}
-          className="bg-slate-800/75 z-20 p-6 rounded-lg shadow-lg w-full max-w-md space-y-3"
+          className="bg-slate-800/75 z-20 p-3 sm:p-6 rounded-lg shadow-lg w-full max-w-sm sm:max-w-md space-y-2 sm:space-y-3"
         >
           <input type="hidden" name="date" value={formatDate(now)} />
-          <div className="flex flex-row">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-0">
             <label
-              className="text-white font-bold text-lg mb-1 whitespace-nowrap"
+              className="text-white font-bold text-sm sm:text-lg mb-1 sm:whitespace-nowrap flex-1"
               htmlFor="water"
             >
               Water (oz)
@@ -298,13 +298,13 @@ export default function Home() {
               type="number"
               value={log.water}
               onChange={handleChange("water")}
-              className="w-1/4 p-2 rounded bg-slate-700 border-solid border-2 border-white"
+              className="w-full sm:w-1/4 p-1 sm:p-2 rounded bg-slate-700 border-solid border-2 border-white text-sm sm:text-base"
             />
           </div>
 
-          <div className="flex flex-row">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-0">
             <label
-              className="text-white font-bold text-lg mb-1 whitespace-nowrap"
+              className="text-white font-bold text-sm sm:text-lg mb-1 sm:whitespace-nowrap flex-1"
               htmlFor="steps"
             >
               Steps
@@ -315,13 +315,13 @@ export default function Home() {
               type="number"
               value={log.steps}
               onChange={handleChange("steps")}
-              className="w-1/4 p-2 rounded bg-slate-700 border-solid border-2 border-white"
+              className="w-full sm:w-1/4 p-1 sm:p-2 rounded bg-slate-700 border-solid border-2 border-white text-sm sm:text-base"
             />
           </div>
 
-          <div className="flex flex-row text-white">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-0 text-white">
             <label
-              className="text-white font-bold text-lg mb-1 whitespace-nowrap"
+              className="text-white font-bold text-sm sm:text-lg mb-1 sm:whitespace-nowrap flex-1"
               htmlFor="sleep"
             >
               Sleep (hrs)
@@ -332,13 +332,13 @@ export default function Home() {
               type="number"
               value={log.sleep}
               onChange={handleChange("sleep")}
-              className="w-1/4 p-2 rounded bg-slate-700  border-solid border-2 border-white text-blue"
+              className="w-full sm:w-1/4 p-1 sm:p-2 rounded bg-slate-700 border-solid border-2 border-white text-blue text-sm sm:text-base"
             />
           </div>
 
-          <div className="flex flex-row">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-0">
             <label
-              className="text-white font-bold text-lg mb-1"
+              className="text-white font-bold text-sm sm:text-lg mb-1 flex-1"
               htmlFor="outdoors"
             >
               Time Spent Outdoors (mins)
@@ -349,13 +349,13 @@ export default function Home() {
               type="number"
               value={log.outdoors}
               onChange={handleChange("outdoors")}
-              className="w-1/4 p-2 rounded bg-slate-700 text-white border-solid border-2 border-white text-white"
+              className="w-full sm:w-1/4 p-1 sm:p-2 rounded bg-slate-700 text-white border-solid border-2 border-white text-sm sm:text-base"
             />
           </div>
 
-          <div className="flex flex-row">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-0">
             <label
-              className="text-white font-bold text-lg mb-1"
+              className="text-white font-bold text-sm sm:text-lg mb-1 flex-1"
               htmlFor="activity"
             >
               Physical Activity (mins)
@@ -366,46 +366,48 @@ export default function Home() {
               type="number"
               value={log.activity}
               onChange={handleChange("activity")}
-              className="w-1/4 p-2 rounded bg-slate-700 text-white border-solid border-2 border-white text-white"
+              className="w-full sm:w-1/4 p-1 sm:p-2 rounded bg-slate-700 text-white border-solid border-2 border-white text-sm sm:text-base"
             />
           </div>
 
-          <div className="flex flex-row items-center gap-4">
-            <span className="w-1/2 text-white font-bold text-lg">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+            <span className="w-full sm:w-1/2 text-white font-bold text-sm sm:text-lg">
               Cooked at Home?
             </span>
-            <button
-              type="button"
-              onClick={() =>
-                setLog((prev) => ({ ...prev, cookedAtHome: true }))
-              }
-              className={`px-3 py-1 border rounded ${
-                log.cookedAtHome
-                  ? "bg-green-500 text-white"
-                  : "text-white font-bold text-lg"
-              }`}
-            >
-              Yes
-            </button>
-            <button
-              type="button"
-              onClick={() =>
-                setLog((prev) => ({ ...prev, cookedAtHome: false }))
-              }
-              className={`px-3 py-1 border rounded ${
-                log.cookedAtHome === false
-                  ? "bg-green-500 text-white"
-                  : "text-gray-200"
-              }`}
-            >
-              No
-            </button>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() =>
+                  setLog((prev) => ({ ...prev, cookedAtHome: true }))
+                }
+                className={`px-2 sm:px-3 py-1 border rounded text-sm sm:text-base ${
+                  log.cookedAtHome
+                    ? "bg-green-500 text-white"
+                    : "text-white font-bold"
+                }`}
+              >
+                Yes
+              </button>
+              <button
+                type="button"
+                onClick={() =>
+                  setLog((prev) => ({ ...prev, cookedAtHome: false }))
+                }
+                className={`px-2 sm:px-3 py-1 border rounded text-sm sm:text-base ${
+                  log.cookedAtHome === false
+                    ? "bg-green-500 text-white"
+                    : "text-gray-200"
+                }`}
+              >
+                No
+              </button>
+            </div>
           </div>
 
           {/* Conditional Restaurant Cost */}
           {!log.cookedAtHome && (
-            <div className="flex flex-row gap-4">
-              <label className="w-1/2 text-gray-200" htmlFor="eatingOutCost">
+            <div className="flex flex-col sm:flex-row gap-1 sm:gap-4">
+              <label className="w-full sm:w-1/2 text-gray-200 text-sm sm:text-base" htmlFor="eatingOutCost">
                 $ Spent at Restaurant
               </label>
               <input
@@ -415,14 +417,14 @@ export default function Home() {
                 step="0.01"
                 value={log.eatingOutCost}
                 onChange={handleChange("eatingOutCost")}
-                className="w-1/2 p-2 rounded bg-slate-700 text-white focus:outline-indigo-400"
+                className="w-full sm:w-1/2 p-1 sm:p-2 rounded bg-slate-700 text-white focus:outline-indigo-400 text-sm sm:text-base"
               />
             </div>
           )}
 
           <div className="space-y-2">
-            <span className="text-gray-200">How do you feel today?</span>
-            <div className="flex justify-between space-x-4">
+            <span className="text-gray-200 text-sm sm:text-base">How do you feel today?</span>
+            <div className="flex justify-between space-x-2 sm:space-x-4">
               {[
                 { label: "😢", title: "Very unhappy" },
                 { label: "🙁", title: "A little unhappy" },
@@ -440,7 +442,7 @@ export default function Home() {
                     className="peer sr-only"
                   />
                   <span
-                    className="cursor-pointer text-4xl peer-checked:scale-125 peer-checked:opacity-100 opacity-60 transition"
+                    className="cursor-pointer text-2xl sm:text-4xl peer-checked:scale-125 peer-checked:opacity-100 opacity-60 transition"
                     title={title}
                   >
                     {label}
@@ -452,24 +454,24 @@ export default function Home() {
 
           {/* 2. Free-form notes */}
           <div className="flex flex-col">
-            <label className="text-yellow-800 mb-1" htmlFor="notes">
+            <label className="text-yellow-800 mb-1 text-sm sm:text-base" htmlFor="notes">
               Journal Entry
             </label>
             <textarea
               id="notes"
               name="notes"
-              rows={4}
+              rows={3}
               value={log.notes}
               onChange={handleNotesChange}
               placeholder="Write your thoughts here…"
-              className="resize-y focus:outline-none text-yellow-900 font-focus:ring-0 tracking-wide font-diary p-4 bg-yellow-50 bg-opacity-80 placeholder-yellow-600 placeholder-opacity-70 border-2 border-yellow-300  rounded-lg shadow-inner italic"
+              className="resize-y focus:outline-none text-yellow-900 font-focus:ring-0 tracking-wide font-diary p-2 sm:p-4 bg-yellow-50 bg-opacity-80 placeholder-yellow-600 placeholder-opacity-70 border-2 border-yellow-300 rounded-lg shadow-inner italic text-sm sm:text-base"
             />
           </div>
-          <div className="flex justify-end">
+          <div className="flex justify-center sm:justify-end">
             <button
               type="submit"
               disabled={saving}
-              className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 disabled:bg-gray-500"
+              className="w-full sm:w-auto px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 disabled:bg-gray-500 text-sm sm:text-base"
             >
               {saving ? "Saving..." : "Save"}
             </button>
@@ -481,52 +483,52 @@ export default function Home() {
       <div className="ground">
         <img
           src="/Green Trees/Tree 1.png"
-          className="absolute bottom-10 left-4 w-60 h-100 pixelated z-10"
+          className="absolute bottom-10 left-4 w-30 h-50 sm:w-60 sm:h-100 pixelated z-10"
         />
         <img
           src="/Green Trees/Tree 1.png"
-          className="absolute bottom-20 left-50 w-60 h-100 pixelated z-10"
+          className="absolute bottom-20 left-50 w-30 h-50 sm:w-60 sm:h-100 pixelated z-10"
         />
         <img
           src="/Green Trees/Tree 2.png"
-          className="absolute bottom-30 left-90 w-60 h-100 pixelated z-10"
+          className="absolute bottom-30 left-90 w-30 h-50 sm:w-60 sm:h-100 pixelated z-10"
         />
         <img
           src="/Green Trees/Tree 2.png"
-          className="absolute bottom-30 left-120 w-60 h-100 pixelated z-10"
+          className="absolute bottom-30 left-120 w-30 h-50 sm:w-60 sm:h-100 pixelated z-10"
         />
         <img
           src="/Green Trees/Tree 3.0.png"
-          className="absolute bottom-30 right-120 w-60 h-100 pixelated z-10"
+          className="absolute bottom-30 right-120 w-30 h-50 sm:w-60 sm:h-100 pixelated z-10"
         />
         <img
           src="/Green Trees/Tree 3.0.png"
-          className="absolute bottom-20 right-90 w-60 h-100 pixelated z-10"
+          className="absolute bottom-20 right-90 w-30 h-50 sm:w-60 sm:h-100 pixelated z-10"
         />
         <img
           src="/Green Trees/Tree 3.1.png"
-          className="absolute bottom-20 right-50 w-60 h-100 pixelated z-10"
+          className="absolute bottom-20 right-50 w-30 h-50 sm:w-60 sm:h-100 pixelated z-10"
         />
         <img
           src="/Green Trees/Tree 4.png"
-          className="absolute bottom-10 right-20 w-60 h-100 pixelated z-10"
+          className="absolute bottom-10 right-20 w-30 h-50 sm:w-60 sm:h-100 pixelated z-10"
         />
-        {/* Additional trees in the middle */}
+        {/* Additional trees in the middle - hidden on mobile */}
         <img
           src="/Green Trees/Tree 1.png"
-          className="absolute bottom-25 left-1/3 w-60 h-100 pixelated z-10"
+          className="hidden sm:block absolute bottom-25 left-1/3 w-60 h-100 pixelated z-10"
         />
         <img
           src="/Green Trees/Tree 2.png"
-          className="absolute bottom-15 left-1/2 w-60 h-100 pixelated z-10"
+          className="hidden sm:block absolute bottom-15 left-1/2 w-60 h-100 pixelated z-10"
         />
         <img
           src="/Green Trees/Tree 3.0.png"
-          className="absolute bottom-35 right-1/3 w-60 h-100 pixelated z-10"
+          className="hidden sm:block absolute bottom-35 right-1/3 w-60 h-100 pixelated z-10"
         />
         <img
           src="/Green Trees/Tree 4.png"
-          className="absolute bottom-25 right-1/2 w-60 h-100 pixelated z-10"
+          className="hidden sm:block absolute bottom-25 right-1/2 w-60 h-100 pixelated z-10"
         />
       </div>
 
