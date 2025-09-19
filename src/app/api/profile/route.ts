@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getClient } from "@/app/lib/log-action";
+import { getClient } from "../../lib/mongodb-client";
 
 export async function POST(req: NextRequest) {
   const client = await getClient();

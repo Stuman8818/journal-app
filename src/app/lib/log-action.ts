@@ -1,16 +1,7 @@
 "use server";
 
-import { MongoClient } from "mongodb";
 import { revalidatePath } from "next/cache";
-
-let cached: MongoClient | null = null;
-export async function getClient() {
-  if (cached) return cached;
-  const client = new MongoClient(process.env.MONGODB_URI!);
-  await client.connect();
-  cached = client;
-  return client;
-}
+import { getClient } from "./mongodb-client";
 
 export async function createLog(formData: FormData) {
   const date = formData.get("date") as string;
