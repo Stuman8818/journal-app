@@ -4,7 +4,7 @@ import "./globals.css";
 import { Press_Start_2P } from "next/font/google";
 import ClientProviders from "./ClientProviders";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "../app/api/auth/[...nextauth]/route";
+import { authOptions } from "./lib/auth";
 
 const pressStart = Press_Start_2P({ subsets: ["latin"], weight: "400" });
 
