@@ -196,7 +196,7 @@ export default function Home() {
       </div>
     );
   }
-  return +(
+  return (
     <div className="w-screen h-screen sm:aspect-[4/3] border-[5px] sm:border-[10px] border-[#333] overflow-y-auto overflow-x-hidden pixelated relative">
       {/* Header and Title */}
       <Header />
