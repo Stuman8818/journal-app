@@ -39,7 +39,7 @@ export default function Home() {
   const [log, setLog] = useState<DailyLog>(initialLog);
   const [saving, setSaving] = useState(false);
   const [now, setNow] = useState(() => {
-    const dateParam = searchParams?.get('date');
+    const dateParam = searchParams?.get("date");
     if (dateParam) {
       const parsedDate = new Date(dateParam);
       return isNaN(parsedDate.getTime()) ? new Date() : parsedDate;
@@ -49,13 +49,12 @@ export default function Home() {
   const leafContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const dateParam = searchParams?.get('date');
+    const dateParam = searchParams?.get("date");
     if (!dateParam) {
       const timer = setInterval(() => setNow(new Date()), 1000);
       return () => clearInterval(timer);
     }
   }, [searchParams]);
-
 
   const formatDate = (d: Date) => {
     const mm = String(d.getMonth() + 1).padStart(2, "0");
@@ -197,7 +196,7 @@ export default function Home() {
       </div>
     );
   }
-  return (
+  return +(
     <div className="w-screen h-screen sm:aspect-[4/3] border-[5px] sm:border-[10px] border-[#333] overflow-y-auto overflow-x-hidden pixelated relative">
       {/* Header and Title */}
       <Header />
@@ -207,7 +206,9 @@ export default function Home() {
           className="flex justify-start w-20 h-20 sm:w-40 sm:h-40 pixelated z-10"
           alt="Shiny Sun"
         />
-        <h1 className="title text-lg sm:text-xl z-11 order-first sm:order-none">Daily Log</h1>
+        <h1 className="title text-lg sm:text-xl z-11 order-first sm:order-none">
+          Daily Quest
+        </h1>
         <h1
           style={{ color: "white" }}
           className="text-sm sm:text-2xl z-20 flex justify-end text-center sm:text-right"
@@ -401,7 +402,10 @@ export default function Home() {
           {/* Conditional Restaurant Cost */}
           {!log.cookedAtHome && (
             <div className="flex flex-col sm:flex-row gap-1 sm:gap-4">
-              <label className="w-full sm:w-1/2 text-gray-200 text-sm sm:text-base" htmlFor="eatingOutCost">
+              <label
+                className="w-full sm:w-1/2 text-gray-200 text-sm sm:text-base"
+                htmlFor="eatingOutCost"
+              >
                 $ Spent at Restaurant
               </label>
               <input
@@ -417,7 +421,9 @@ export default function Home() {
           )}
 
           <div className="space-y-2">
-            <span className="text-gray-200 text-sm sm:text-base">How do you feel today?</span>
+            <span className="text-gray-200 text-sm sm:text-base">
+              How do you feel today?
+            </span>
             <div className="flex justify-between space-x-2 sm:space-x-4">
               {[
                 { label: "😢", title: "Very unhappy" },
@@ -448,7 +454,10 @@ export default function Home() {
 
           {/* 2. Free-form notes */}
           <div className="flex flex-col">
-            <label className="text-yellow-800 mb-1 text-sm sm:text-base" htmlFor="notes">
+            <label
+              className="text-yellow-800 mb-1 text-sm sm:text-base"
+              htmlFor="notes"
+            >
               Journal Entry
             </label>
             <textarea
