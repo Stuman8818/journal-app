@@ -44,6 +44,7 @@ export default function Home() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [log, setLog] = useState<DailyLog>(initialLog);
+  const [isInIframe, setIsInIframe] = useState(false);
   const [saving, setSaving] = useState(false);
   const [now, setNow] = useState(() => {
     const dateParam = searchParams?.get("date");
@@ -54,6 +55,10 @@ export default function Home() {
     return new Date();
   });
   const leafContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setIsInIframe(window.self !== window.top);
+  }, []);
 
   useEffect(() => {
     const dateParam = searchParams?.get("date");
@@ -148,50 +153,52 @@ export default function Home() {
   if (loading) return <div className="p-4">Checking session…</div>;
 
   if (!session) {
-    return (
-      <div className="flex items-center justify-center h-screen bg-gray-100">
-        <form
-          onSubmit={handleAuth}
-          className="p-8 bg-white rounded shadow-md space-y-4 w-80"
-        >
-          <h2 className="text-2xl text-center">
-            {isRegister ? "Register" : "Log In"}
-          </h2>
-          <input
-            type="text"
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            className="w-full p-2 border rounded border-sky-500 text-sky-500"
-            required
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full p-2 border rounded border-blue border-sky-500 text-sky-500"
-            required
-          />
-          <button
-            type="submit"
-            className="w-full py-2 bg-blue-600 text-white rounded"
+    if (isInIframe) {
+      return (
+        <div className="flex items-center justify-center h-screen bg-gray-100">
+          <form
+            onSubmit={handleAuth}
+            className="p-8 bg-white rounded shadow-md space-y-4 w-80"
           >
-            {isRegister ? "Create Account" : "Log In"}
-          </button>
-          <p className="text-center text-sm">
-            {isRegister ? "Already have one?" : "No account yet?"}{" "}
+            <h2 className="text-2xl text-center">
+              {isRegister ? "Register" : "Log In"}
+            </h2>
+            <input
+              type="text"
+              placeholder="Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="w-full p-2 border rounded border-sky-500 text-sky-500"
+              required
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full p-2 border rounded border-blue border-sky-500 text-sky-500"
+              required
+            />
             <button
-              type="button"
-              onClick={() => setIsRegister(!isRegister)}
-              className="text-blue-600 underline"
+              type="submit"
+              className="w-full py-2 bg-blue-600 text-white rounded"
             >
-              {isRegister ? "Log In" : "Register"}
+              {isRegister ? "Create Account" : "Log In"}
             </button>
-          </p>
-        </form>
-      </div>
-    );
+            <p className="text-center text-sm">
+              {isRegister ? "Already have one?" : "No account yet?"}{" "}
+              <button
+                type="button"
+                onClick={() => setIsRegister(!isRegister)}
+                className="text-blue-600 underline"
+              >
+                {isRegister ? "Log In" : "Register"}
+              </button>
+            </p>
+          </form>
+        </div>
+      );
+    }
   }
   return (
     <div className="w-screen h-screen sm:aspect-[4/3] border-[5px] sm:border-[10px] border-[#333] overflow-y-auto overflow-x-hidden pixelated relative">
