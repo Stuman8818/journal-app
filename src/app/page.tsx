@@ -152,8 +152,8 @@ export default function Home() {
 
   if (loading) return <div className="p-4">Checking session…</div>;
 
-  if (!session) {
-    if (isInIframe) {
+  if (!session && !isInIframe) {
+
       return (
         <div className="flex items-center justify-center h-screen bg-gray-100">
           <form
