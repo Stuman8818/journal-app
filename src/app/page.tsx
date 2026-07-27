@@ -1,9 +1,9 @@
 "use client";
-import { useEffect, useRef, useState, ChangeEvent, FormEvent } from "react";
+import { signIn, useSession } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
-import Header from "./components/header";
+import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
 import { createLog } from "../app/lib/log-action";
-import { useSession, signIn } from "next-auth/react";
+import Header from "./components/header";
 
 interface DailyLog {
   water: number;
@@ -54,12 +54,6 @@ export default function Home() {
     return new Date();
   });
   const leafContainerRef = useRef<HTMLDivElement>(null);
-
-  const [isInIframe, setIsInIframe] = useState(false);
-
-  useEffect(() => {
-    setIsInIframe(window.self !== window.top);
-  }, []);
 
   useEffect(() => {
     const dateParam = searchParams?.get("date");

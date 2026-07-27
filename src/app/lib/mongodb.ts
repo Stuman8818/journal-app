@@ -1,17 +1,42 @@
-import { MongoClient } from "mongodb";
+import { Db, MongoClient, ServerApiVersion } from "mongodb";
 
-if (!process.env.MONGODB_URI) {
-  throw new Error("Missing MONGODB_URI in env");
+const uri = process.env.MONGODB_URI?.trim();
+const databaseName = process.env.MONGODB_DB?.trim();
+
+if (!uri) {
+  throw new Error("MONGODB_URI is not set. Add it to .env.local or .env.");
 }
 
-const uri = process.env.MONGODB_URI;
-let cachedClient: MongoClient | null = null;
-
-/** Returns a connected MongoClient, cached across hot-reloads */
-export default async function clientPromise() {
-  if (cachedClient) return cachedClient;
-  const client = new MongoClient(uri);
-  await client.connect();
-  cachedClient = client;
-  return client;
+if (!databaseName) {
+  throw new Error("MONGODB_DB is not set. Add it to .env.local or .env.");
 }
+
+const options = {
+  serverSelectionTimeoutMS: 10_000,
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  },
+};
+
+declare global {
+  // Reuse the connection while Next.js reloads modules in development.
+  // eslint-disable-next-line no-var
+  var mongoClientPromise: Promise<MongoClient> | undefined;
+}
+
+const clientPromise =
+  global.mongoClientPromise ?? new MongoClient(uri, options).connect();
+
+if (process.env.NODE_ENV !== "production") {
+  global.mongoClientPromise = clientPromise;
+}
+
+export async function getDatabase(): Promise<Db> {
+  const client = await clientPromise;
+  return client.db(databaseName);
+}
+
+export { databaseName };
+export default clientPromise;

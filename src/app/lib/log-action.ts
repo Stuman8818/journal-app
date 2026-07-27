@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { getClient } from "./mongodb-client";
+import { getDatabase } from "./mongodb";
 
 export async function createLog(formData: FormData) {
   const date = formData.get("date") as string;
@@ -20,8 +20,7 @@ export async function createLog(formData: FormData) {
     notes,
   };
 
-  const client = await getClient();
-  const db = client.db(process.env.MONGODB_DB);
+  const db = await getDatabase();
   await db.collection("dailyLogs").insertOne(data);
   console.log(db.collection);
   // optionally revalidate the page:

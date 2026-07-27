@@ -1,11 +1,11 @@
+import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
+import bcrypt from "bcryptjs";
 import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
-import clientPromise from "./mongodb";
-import bcrypt from "bcryptjs";
+import clientPromise, { getDatabase } from "./mongodb";
 
 export const authOptions: NextAuthOptions = {
-  adapter: MongoDBAdapter(clientPromise()),
+  adapter: MongoDBAdapter(clientPromise),
   session: { strategy: "jwt" },
   secret: process.env.NEXTAUTH_SECRET,
   providers: [
@@ -18,8 +18,8 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials) {
         if (!credentials) return null;
 
-        const client = await clientPromise();
-        const users = client.db(process.env.MONGODB_DB).collection("users");
+        const db = await getDatabase();
+        const users = db.collection("users");
 
         const user = await users.findOne({
           username: credentials.username,

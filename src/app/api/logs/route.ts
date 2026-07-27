@@ -1,18 +1,16 @@
 // app/api/logs/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import { getClient } from "../../lib/mongodb-client";
+import { getDatabase } from "../../lib/mongodb";
 
 export async function POST(req: NextRequest) {
-  const client = await getClient();
-  const db = client.db(process.env.MONGODB_DB || "myDatabase");
+  const db = await getDatabase();
   const data = await req.json();
   const result = await db.collection("dailyLogs").insertOne(data);
   return NextResponse.json({ insertedId: result.insertedId }, { status: 201 });
 }
 
 export async function GET() {
-  const client = await getClient();
-  const db = client.db(process.env.MONGODB_DB!);
+  const db = await getDatabase();
   const logs = await db
     .collection("dailyLogs")
     .find()

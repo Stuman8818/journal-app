@@ -1,14 +1,14 @@
 // src/app/api/register/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
-import clientPromise from "../../lib/mongodb";
+import { getDatabase } from "../../lib/mongodb";
 
 export async function POST(req: NextRequest) {
   try {
     const { username, password } = await req.json();
 
-    const client = await clientPromise();
-    const users = client.db(process.env.MONGODB_DB).collection("users");
+    const db = await getDatabase();
+    const users = db.collection("users");
 
     // check exists
     if (await users.findOne({ username })) {
