@@ -24,6 +24,24 @@ export interface Post {
   eatingOutCost: number;
 }
 
+function parseLogDate(value: string): Date {
+  const dateOnly = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+
+  if (dateOnly) {
+    const [, year, month, day] = dateOnly;
+    return new Date(Number(year), Number(month) - 1, Number(day));
+  }
+
+  return new Date(value);
+}
+
+function localDateKey(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
 const CalendarPage: React.FC = () => {
   const router = useRouter();
   // defaultPosts is some Post[] you define above
@@ -57,7 +75,7 @@ const CalendarPage: React.FC = () => {
 
   const monthPosts = useMemo(() => {
     return posts.filter((log) => {
-      const d = new Date(log.date);
+      const d = parseLogDate(log.date);
       return d.getFullYear() === year && d.getMonth() + 1 === month;
     });
   }, [posts, year, month]);
@@ -73,9 +91,12 @@ const CalendarPage: React.FC = () => {
     // 1) build a map YYYY-MM-DD → latest log of that day
     const latestByDay: Record<string, Post> = {};
     for (const log of monthPosts) {
-      const dayKey = new Date(log.date).toISOString().slice(0, 10);
+      const dayKey = localDateKey(parseLogDate(log.date));
       const existing = latestByDay[dayKey];
-      if (!existing || new Date(log.date) > new Date(existing.date)) {
+      if (
+        !existing ||
+        parseLogDate(log.date) > parseLogDate(existing.date)
+      ) {
         latestByDay[dayKey] = log;
       }
     }
@@ -182,11 +203,12 @@ const CalendarPage: React.FC = () => {
 
       const latestLogForDate = posts
         .filter((log) => {
-          const d = new Date(log.date);
+          const d = parseLogDate(log.date);
           return d.toLocaleDateString("en-US") === cellKey;
         })
         .sort(
-          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+          (a, b) =>
+            parseLogDate(b.date).getTime() - parseLogDate(a.date).getTime()
         )[0];
       return (
         <>

@@ -36,6 +36,14 @@ function formatDate(date: Date): string {
   return `${year}-${month}-${day}`;
 }
 
+function parseCalendarDate(value: string): Date {
+  const dateOnly = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+  if (!dateOnly) return new Date(value);
+
+  const [, year, month, day] = dateOnly;
+  return new Date(Number(year), Number(month) - 1, Number(day));
+}
+
 export default function Home() {
   const searchParams = useSearchParams();
   const { data: session, status } = useSession();
@@ -48,7 +56,7 @@ export default function Home() {
   const [now, setNow] = useState(() => {
     const dateParam = searchParams?.get("date");
     if (dateParam) {
-      const parsedDate = new Date(dateParam);
+      const parsedDate = parseCalendarDate(dateParam);
       return isNaN(parsedDate.getTime()) ? new Date() : parsedDate;
     }
     return new Date();
