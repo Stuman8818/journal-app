@@ -1,0 +1,23 @@
+[next-auth][warn][NEXTAUTH_URL] 
+https://next-auth.js.org/warnings#nextauth_url
+Error: querySrv ETIMEOUT _mongodb._tcp.journaldata.uk5jyqr.mongodb.net
+    at ignore-listed frames {
+  errno: undefined,
+  code: 'ETIMEOUT',
+  syscall: 'querySrv',
+  hostname: '_mongodb._tcp.journaldata.uk5jyqr.mongodb.net'
+}
+⨯ unhandledRejection: Error: querySrv ETIMEOUT _mongodb._tcp.journaldata.uk5jyqr.mongodb.net
+    at ignore-listed frames {
+  errno: undefined,
+  code: 'ETIMEOUT',
+  syscall: 'querySrv',
+  hostname: '_mongodb._tcp.journaldata.uk5jyqr.mongodb.net'
+}
+⨯ unhandledRejection:  Error: querySrv ETIMEOUT _mongodb._tcp.journaldata.uk5jyqr.mongodb.net
+    at ignore-listed frames {
+  errno: undefined,
+  code: 'ETIMEOUT',
+  syscall: 'querySrv',
+  hostname: '_mongodb._tcp.journaldata.uk5jyqr.mongodb.net'
+}
